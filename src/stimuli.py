@@ -13,14 +13,16 @@ def main():
 
     core.wait(1.0)
 
-    message.setText('world')
-    win.flip()
-    core.wait(1.0)
+    for i in xrange(0, 10):
+      if i % 2:
+        message.setText('odd')
+      else:
+        message.setText('even')
 
-    print sound.Sound
-    s = sound.Sound('stimulus-400.wav')
-    s.play()
-    #sound.Sound('A',secs=2)
+      win.flip()
+      core.wait(1.0)
+
+    sound.Sound('stimulus-400.wav').play()
     core.wait(2.0)
 
 if __name__ == '__main__':
