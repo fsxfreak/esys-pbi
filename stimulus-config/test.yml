@@ -1,0 +1,36 @@
+---
+name: Experiment Name
+
+trials:
+    one:
+        # initial delay before displaying the first stimuli of the trial
+        lead_in_time_ms: 500
+
+        # delay between the end of a stimuli and the beginning of another
+        transition_time_ms: 1000 
+
+        # delay after the end of a stimuli and the end of the trial
+        lead_out_time_ms: 500
+
+        # valid stimuli_types: images, sounds
+        stimuli_type: images
+
+        # specify folder path relative to the python file running psychopy 
+        stimuli_folder: stimuli/test1
+
+        # valid orderings: numeric, random
+        # numeric gives 'c1.png', a2.png', 'b3.png', 'Z10.png'..
+        # make sure only numbers are not separated by other characters
+        ordering: numeric
+    two:  
+        lead_in_time_ms: 333
+        transition_time_ms: 125
+        lead_out_time_ms: 2500
+        stimuli_type: sounds
+        stimuli_folder: stimuli/test2
+        ordering: random
+
+trial_order:
+    - one
+    - two
+    - one
