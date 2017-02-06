@@ -3,6 +3,8 @@ from psychopy import prefs
 prefs.general['audioLib'] = ['pygame']
 from psychopy import visual, core, sound 
 
+# LSL.openChannel('name', type, UID)
+
 def main():
     win = visual.Window([512, 512])
 
