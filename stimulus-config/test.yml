@@ -1,4 +1,4 @@
----
+--- !ExperimentConfig
 name: Experiment Name
 
 trials:
@@ -16,7 +16,7 @@ trials:
         stimuli_type: images
 
         # specify folder path relative to the python file running psychopy 
-        stimuli_folder: stimuli/test1
+        stimuli_folder: stimuli/image_test
 
         # valid orderings: numeric, random
         # numeric gives 'c1.png', a2.png', 'b3.png', 'Z10.png'..
@@ -27,7 +27,7 @@ trials:
         transition_time_ms: 125
         lead_out_time_ms: 2500
         stimuli_type: sounds
-        stimuli_folder: stimuli/test2
+        stimuli_folder: stimuli/sound_test
         ordering: random
 
 trial_order:
