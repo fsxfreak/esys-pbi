@@ -1,4 +1,8 @@
 import yaml
+import re
+
+from os import listdir
+from os.path import isfile, join
 
 class TrialConfig(object):
   def __init__(self, *args, **kwargs):
@@ -11,7 +15,7 @@ class TrialConfig(object):
       setattr(self, key, kwargs[key])
 
   def __str__(self):
-    return (self.__dict__)
+    return self.stimuli_folder
 
 class ExperimentConfig(object):
   def __init__(self, name, trials, trial_order):
@@ -33,6 +37,7 @@ def config_construct(loader, node):
   state = loader.construct_mapping(node, deep=True)
   instance.__init__(**state)
 
+
 def main():
   yaml.add_constructor(u'!ExperimentConfig', config_construct)
 
@@ -40,9 +45,10 @@ def main():
   cfg = yaml.load(raw_cfg)
   raw_cfg.close()
 
-  print(cfg)
-
-  # TODO sort file order by numeric, before an underscore
+  files_set = [ listdir(f) for f in [ cfg.trials[t].stimuli_folder for t in cfg.trials ] ]
+  for files in files_set:
+    # default to natural sorted order. If ordering='random', shuffle later
+    files.sort(key=lambda filename: int(re.sub(r'_.*', '', filename)))
 
 if __name__ == '__main__':
   main()

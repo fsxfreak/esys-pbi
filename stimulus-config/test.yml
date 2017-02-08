@@ -19,8 +19,8 @@ trials:
         stimuli_folder: stimuli/image_test
 
         # valid orderings: numeric, random
-        # numeric gives 'c1.png', a2.png', 'b3.png', 'Z10.png'..
-        # make sure only numbers are not separated by other characters
+        # numeric gives '1_c.png', 2_a.png', '3_b.png', '4_z.png'..
+        # Ordering by number before the first underscore
         ordering: numeric
     two:  
         lead_in_time_ms: 333
