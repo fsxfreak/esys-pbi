@@ -38,18 +38,24 @@ for imageIndex in range(len(file_name)):
     showStim.draw([window])
     window.flip()
     core.wait(2.0) 
-    stimuli_running = True
+    #stimuli_running = True
     
-
-    # now send it and wait for a bit
-
     #if statement to differentiate between images and audio files
    
     #first element: type of stimuli, second: the filename, third: wait time
     mysample = [stimuli_type, stimulis, time_placeholder]
     outlet.push_sample(mysample)                
     print("now sending data...")
+    if stimulis.lower().endswith(('.png', '.jpg', 'tif', .'gif'))
+        stimuli_type = 'images'
+    elif stimulis.lower().endswith(('.mp3', '.wma', '.wav'))
+        stimuli_type = 'audio'
 
+    #1st element: type of stimuli, 2nd element: filename, 3rd element: wait time
+    mysample = [stimuli_type, stimulis, time_placeholder]
+    print("now sending data...")
+    outlet.push_sample(mysample)                
+    
     time.sleep(0.01)
  
 
