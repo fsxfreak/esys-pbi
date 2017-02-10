@@ -42,7 +42,7 @@ for imageIndex in range(len(file_name)):
     #if statement to differentiate between images and audio files
    
     #first element: type of stimuli, second: the filename, third: wait time
-    mysample = [stimuli_type, stimulis, #time_placeholder#)
+    mysample = [stimuli_type, stimulis, time_placeholder)
     outlet.push_sample(mysample)                
     print("now sending data...")
 
