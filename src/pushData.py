@@ -37,7 +37,7 @@ for imageIndex in range(len(file_name)):
     #stimuli_running = True
     
     #if statement to differentiate between images and audio files
-    if stimulis.lower().endswith(('.png', '.jpg', 'tif', .'gif'))
+    if stimulis.lower().endswith(('.png', '.jpg', '.tif', '.gif'))
         stimuli_type = 'images'
     elif stimulis.lower().endswith(('.mp3', '.wma', '.wav'))
         stimuli_type = 'audio'
