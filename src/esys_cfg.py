@@ -54,6 +54,12 @@ def create_config(filename):
 
 def main():
   cfg = create_config('../stimulus-config/test.yml')
+  '''
+  refer to /stimulus_config/test.yml on how to use this object
+  cfg.trials['trial_name'] object contains an additional parsed field,
+  cfg.trials['trial_name'].files which is all the files displayed by this
+  trial
+  '''
   print(cfg)
 
 if __name__ == '__main__':

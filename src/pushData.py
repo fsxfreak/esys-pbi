@@ -1,13 +1,14 @@
 import time
 import pylsl
-import open_bci_v3 as bci
+import bci.open_bci_v3 as bci
+
 
 #from random import random as rand
 from pylsl import StreamInfo, StreamOutlet
 from psychopy import prefs
 prefs.general['audioLib'] = ['pygame']
 from psychopy import visual, core, sound 
-
+import esys_cfg
 
 NUM_CHANNELS = 8
 SAMP_RATE = 100
@@ -26,6 +27,9 @@ outlet = StreamOutlet(info)
 
 window = visual.Window([512, 512])
 
+cfg = esys_cfg.create_config('../stimulus-config/test.yml')
+print(cfg.trial_order)
+
 imageIndex = 0
 for imageIndex in range(len(file_name)):
     stimulis = file_name[imageIndex]
@@ -42,7 +46,7 @@ for imageIndex in range(len(file_name)):
     #if statement to differentiate between images and audio files
    
     #first element: type of stimuli, second: the filename, third: wait time
-    mysample = [stimuli_type, stimulis, time_placeholder)
+    mysample = [stimuli_type, stimulis, time_placeholder]
     outlet.push_sample(mysample)                
     print("now sending data...")
 
