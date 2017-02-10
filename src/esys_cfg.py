@@ -14,6 +14,10 @@ class TrialConfig(object):
     for key in kwargs:
       setattr(self, key, kwargs[key])
 
+    self.files = listdir(self.stimuli_folder)
+    # need exception handling
+    self.files.sort(key=lambda filename: int(re.sub(r'_.*', '', filename)))
+
   def __str__(self):
     return self.stimuli_folder
 
@@ -31,24 +35,26 @@ class ExperimentConfig(object):
     return ('%s\n\tTrials: %s\n\tOrder: %s' %
         (self.name, self.trials, self.trial_order))
 
-def config_construct(loader, node):
+def experiment_config_construct(loader, node):
   instance = ExperimentConfig.__new__(ExperimentConfig)
   yield instance
   state = loader.construct_mapping(node, deep=True)
   instance.__init__(**state)
 
+yaml.add_constructor(u'!ExperimentConfig', experiment_config_construct)
 
-def main():
-  yaml.add_constructor(u'!ExperimentConfig', config_construct)
-
-  raw_cfg = open('../stimulus-config/test.yml')
+def create_config(filename):
+  raw_cfg = open(filename)
   cfg = yaml.load(raw_cfg)
   raw_cfg.close()
 
-  files_set = [ listdir(f) for f in [ cfg.trials[t].stimuli_folder for t in cfg.trials ] ]
-  for files in files_set:
-    # default to natural sorted order. If ordering='random', shuffle later
-    files.sort(key=lambda filename: int(re.sub(r'_.*', '', filename)))
+  # sort within class later
+
+  return cfg
+
+def main():
+  cfg = create_config('../stimulus-config/test.yml')
+  print(cfg)
 
 if __name__ == '__main__':
   main()
