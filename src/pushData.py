@@ -8,6 +8,7 @@ from pylsl import StreamInfo, StreamOutlet
 from psychopy import prefs
 prefs.general['audioLib'] = ['pygame']
 from psychopy import visual, core, sound 
+
 import esys_cfg
 
 NUM_CHANNELS = 8
@@ -29,10 +30,16 @@ window = visual.Window([512, 512])
 
 cfg = esys_cfg.create_config('../stimulus-config/test.yml')
 print(cfg.trial_order)
+#trial_order = ['one', 'two', 'one']
 
+for element in cfg.trial_order: #loop through all elements in array trial_order
+  trials['one']                 #trial is a dictionary, 'one' is a keyword
+# print(trials['one'].stimuli_type)    
+  
 imageIndex = 0
-for imageIndex in range(len(file_name)):
-    stimulis = file_name[imageIndex]
+for imageIndex in range(len(cfg.trials[element].files)):
+
+ stimulis = cfg.trials[element].files[imageIndex]
     showStim = visual.ImageStim(window, stimulis)
     #visual.ImageStim(window, image = stimulus)
     showStim.draw([window])
