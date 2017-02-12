@@ -17,40 +17,27 @@ SAMP_RATE = 100
 info = StreamInfo('OpenBCI', 'EEG', NUM_CHANNELS, SAMP_RATE, 'float32', 'myuid34234')
 outlet = StreamOutlet(info)
 
-#funtion call to start displaying images
-#def displayStimuli
-# for file in os.listdir('directory'):
-# for i in range(0,len(images)):
-
-
-# def display(files, .....):
-#   ex: file_name = ['/dir/dir2/img.png']
-
 window = visual.Window([512, 512])
 
 cfg = esys_cfg.create_config('../stimulus-config/test.yml')
 print(cfg.trial_order)
-#trial_order = ['one', 'two', 'one']
 
-for element in cfg.trial_order: #loop through all elements in array trial_order
-  trials['one']                 #trial is a dictionary, 'one' is a keyword
-# print(trials['one'].stimuli_type)    
+
+for element in cfg.trial_order:               #loop through all elements in array trial_order
+  trials['one']                               #trial is a dictionary, 'one' is a keyword  
   
 imageIndex = 0
 for imageIndex in range(len(cfg.trials[element].files)):
 
  stimulis = cfg.trials[element].files[imageIndex]
     showStim = visual.ImageStim(window, stimulis)
-    #visual.ImageStim(window, image = stimulus)
-    showStim.draw([window])
+    
+    showStim.draw(window)
     window.flip()
     core.wait(2.0) 
-    #stimuli_running = True
-    
-    #if statement to differentiate between images and audio files
-   
-    #first element: type of stimuli, second: the filename, third: wait time
-    mysample = [stimuli_type, stimulis, time_placeholder]
+     
+     
+    mysample = [stimuli_type, stimulis, time_placeholder]         #1st element: stimuli type; 2nd element: filename, 3rd element: wait time
     outlet.push_sample(mysample)                
     print("now sending data...")
     if stimulis.lower().endswith(('.png', '.jpg', 'tif', .'gif'))
