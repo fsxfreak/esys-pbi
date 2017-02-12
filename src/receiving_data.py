@@ -35,42 +35,50 @@ from pylsl import StreamInfo, StreamOutlet, StreamInlet, resolve_stream
 #create empty array to receive data
 NUM_CHANNELS = 8
 data = []
-f_data = ""
-s_data = ""
+bci_dataFile = ""
+bci_stimulusFile = "" 
 
-#to store data belonging to each experiment and type of stimuli
-def recordData(data):
-#open file to write into
-    f = open('Run4','w')
-#    f_data = str(data)[1:-1]
-    f_data = ' '.join(map(str,data)) + ' '+ str(datetime.now())
-    f.write(f_data)
-
+#to store list of data arrays from each channel set
+#def recordData(data):
+#  all_data = all_data.append(data)
+#  all_data = all_data.append(str(datetime.now()))
+   
+#to store data belonging to each experiment and type of stimuli    
 def recordStimulus(details):
-    s_data = ""
-    s = open('Stimulus %s', %str(datetime.now()),'w')
-    s_data = ' '.join(map(str,details))
+    details.append(str(datetime.now()))
 
 #each data set is added on to the variable "channels"
 def handleSample(sample):
-    channels = sample.channel_data[0:NUM_CHANNELS]   
+    channels = sample.channel_data[0:NUM_CHANNELS]
+    channels.append(str(datetime.now()))
     data.append(channels)
- #   data = [0, 1, 2, 3, 4, 5, 6, 7, 8] 
-#   print(channels)
-    
-    recordData(data)
+   # recordData(data)#to store data belonging to each experiment and type of stimuli
     recordStimulus(details)
+
+def saveFile():
+for i in len(data):
+    bci_dataFile = ' '.join(map(str,data(i)))
+    f.write(bci_dataFile)
+    f.write("\n")
+
+bci_stimulusFile = ' '.join(map(str(details)))
+f.write(bci_stimulusFile)
+f.write("\n")
+
+def stop():
+  running = False
+  saveFile()
+  board.disconnect()
     
 #initialize board, set it up to start streaming
 def main():
-    #while stimuli_running == True:
-        board = bci.OpenBCIBoard(port='/dev/ttyUSB0', filter_data=True, daisy=False)
-        print (board.getNbEEGChannels(), "EEG channels and", 
-                board.getNbAUXChannels(), "AUX channels at", 
-                board.getSampleRate(), "Hz.")
-        board.start_streaming(handleSample)
-        #sample = True
-        #handleSample(sample)
+    board = bci.OpenBCIBoard(port='/dev/ttyUSB0', filter_data=True, daisy=False)
+    print (board.getNbEEGChannels(), "EEG channels and", 
+    board.getNbAUXChannels(), "AUX channels at", 
+    board.getSampleRate(), "Hz.")
+    running = true
+    while running == true:
+         board.start_streaming(handleSample)
 
 if __name__ == '__main__':
     main()
