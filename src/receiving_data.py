@@ -35,16 +35,14 @@ from pylsl import StreamInfo, StreamOutlet, StreamInlet, resolve_stream
 #create empty array to receive data
 NUM_CHANNELS = 8
 data = []
-f_data = ""
-s_data = ""
 
 #to store data belonging to each experiment and type of stimuli
-def recordData(data):
+def recordData(data, f):
 #open file to write into
-    f = open('Run4','w')
 #    f_data = str(data)[1:-1]
     f_data = ' '.join(map(str,data)) + ' '+ str(datetime.now())
     f.write(f_data)
+    f.write("\n")
 
 def recordStimulus(details):
     s_data = ""
@@ -57,8 +55,9 @@ def handleSample(sample):
     data.append(channels)
  #   data = [0, 1, 2, 3, 4, 5, 6, 7, 8] 
 #   print(channels)
-    
-    recordData(data)
+    f_data = ""
+    f = open('Run4','w')
+    recordData(data, f, f_data)
     recordStimulus(details)
     
 #initialize board, set it up to start streaming
