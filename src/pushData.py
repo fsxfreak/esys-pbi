@@ -38,7 +38,7 @@ for element in cfg.trial_order: #loop through all elements in array trial_order
     stimulis = cfg.trials[element].stimuli_folder + '/' + cfg.trials[element].files[imageIndex]
     showStim = visual.ImageStim(window, stimulis)
     #visual.ImageStim(window, image = stimulus)
-    showStim.draw([window])
+    showStim.draw(window)
     window.flip()
     core.wait(2.0) 
     #stimuli_running = True
