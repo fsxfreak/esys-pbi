@@ -1,3 +1,4 @@
+import gc
 import pylsl
 
 from pylsl import StreamInfo, StreamOutlet
@@ -79,6 +80,9 @@ class Stimuli(object):
     return ('Pushing on channel %s for experiment %s.' 
             % (self.LSL_STREAM_NAME, self.cfg.name))
 
+  def __del__(self):
+    self.window.close()
+
 def load(cfg_filename):
   stim = Stimuli(cfg_filename)
 
@@ -98,7 +102,9 @@ def stop():
     print("No window to close! The experiment hasn't even start()ed.")
     raise TypeError
 
-  stim.window.close() # TODO cleaner close
+  # dirty
+  del(stim)
+  gc.collect()
 
 def main():
   stim = Stimuli('../stimulus-config/test.yml')
