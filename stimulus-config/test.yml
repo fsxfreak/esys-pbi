@@ -6,6 +6,9 @@ trials:
         # initial delay before displaying the first stimuli of the trial
         lead_in_time_ms: 500
 
+        # time that the stimuli is active, may only be relevant for images
+        duration_time_ms: 2000
+
         # delay between the end of a stimuli and the beginning of another
         transition_time_ms: 1000 
 
@@ -24,6 +27,7 @@ trials:
         ordering: numeric
     two:  
         lead_in_time_ms: 333
+        duration_time_ms: 1000 
         transition_time_ms: 125
         lead_out_time_ms: 2500
         stimuli_type: sounds
