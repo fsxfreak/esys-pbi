@@ -31,8 +31,8 @@ def saveFile(data,details):
     f.write(bci_stimulusFile)
     f.write("\n")
 
-def recordSample(details,sample,timestamp)
-    details.append(( timestamp, sample))
+def recordSample(details,sample,timestamp):
+    details.append((timestamp, sample))
 
 def handleSample(sample):
   channels = sample.channel_data[0:NUM_CHANNELS]
