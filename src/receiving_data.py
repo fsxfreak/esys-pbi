@@ -35,6 +35,17 @@ from pylsl import StreamInfo, StreamOutlet, StreamInlet, resolve_stream
 #create empty array to receive data
 NUM_CHANNELS = 8
 data = []
+<<<<<<< HEAD
+
+#to store data belonging to each experiment and type of stimuli
+def recordData(data, f):
+#open file to write into
+#    f_data = str(data)[1:-1]
+    f_data = ' '.join(map(str,data)) + ' '+ str(datetime.now())
+    f.write(f_data)
+    f.write("\n")
+
+=======
 bci_dataFile = ""
 bci_stimulusFile = "" 
 
@@ -44,6 +55,7 @@ bci_stimulusFile = ""
 #  all_data = all_data.append(str(datetime.now()))
    
 #to store data belonging to each experiment and type of stimuli    
+>>>>>>> origin/master
 def recordStimulus(details):
     details.append(str(datetime.now()))
 
@@ -52,7 +64,15 @@ def handleSample(sample):
     channels = sample.channel_data[0:NUM_CHANNELS]
     channels.append(str(datetime.now()))
     data.append(channels)
+<<<<<<< HEAD
+ #   data = [0, 1, 2, 3, 4, 5, 6, 7, 8] 
+#   print(channels)
+    f_data = ""
+    f = open('Run4','w')
+    recordData(data, f, f_data)
+=======
    # recordData(data)#to store data belonging to each experiment and type of stimuli
+>>>>>>> origin/master
     recordStimulus(details)
 
 def saveFile():

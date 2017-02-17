@@ -21,6 +21,40 @@ window = visual.Window([512, 512])
 
 cfg = esys_cfg.create_config('../stimulus-config/test.yml')
 print(cfg.trial_order)
+<<<<<<< HEAD
+#trial_order = ['one', 'two', 'one']
+
+for element in cfg.trial_order: #loop through all elements in array trial_order
+  imageIndex = 0
+  for imageIndex in range(len(cfg.trials[element].files)):
+
+    stimulis = cfg.trials[element].stimuli_folder + '/' + cfg.trials[element].files[imageIndex]
+    showStim = visual.ImageStim(window, stimulis)
+    #visual.ImageStim(window, image = stimulus)
+    showStim.draw(window)
+    window.flip()
+    core.wait(2.0) 
+    #stimuli_running = True
+
+    #if statement to differentiate between images and audio files
+
+    '''
+    #first element: type of stimuli, second: the filename, third: wait time
+    mysample = [stimuli_type, stimulis, time_placeholder]
+    outlet.push_sample(mysample)                
+    print("now sending data...")
+    if stimulis.lower().endswith(('.png', '.jpg', 'tif', .'gif'))
+        stimuli_type = 'images'
+    elif stimulis.lower().endswith(('.mp3', '.wma', '.wav'))
+        stimuli_type = 'audio'
+
+    #1st element: type of stimuli, 2nd element: filename, 3rd element: wait time
+    mysample = [stimuli_type, stimulis, time_placeholder]
+    print("now sending data...")
+    outlet.push_sample(mysample)                
+    '''
+=======
+>>>>>>> c795baf185cd6f750936cd326a07a323972ef3f5
 
 for element in cfg.trial_order:               #loop through all elements in array trial_order
   trials['one']                               #trial is a dictionary, 'one' is a keyword  
