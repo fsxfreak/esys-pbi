@@ -1,4 +1,5 @@
 import gc
+import random
 import pylsl
 
 from pylsl import StreamInfo, StreamOutlet
@@ -23,7 +24,7 @@ class Stimuli(object):
     # psychopy setup
     self.window = visual.Window([1024, 512])
 
-    # preload all of stimuli
+    # preload all of stimuli, in sorted order
     self.loaded_stims = {}
     for trial_name, trial in self.cfg.trials.iteritems():
       stimuli_type = trial.stimuli_type
@@ -36,7 +37,7 @@ class Stimuli(object):
       elif stimuli_type == 'sounds':
         self.loaded_stims[trial_name] = [ sound.Sound(
                                             '%s%s' % (path_prefix, stim_file))
-                                          for stim_file in trial.files]
+                                          for stim_file in trial.files ]
       else:
         print('Unsupported stimuli_type: %s' % stimuli_type)
         raise ValueError 
@@ -52,18 +53,22 @@ class Stimuli(object):
   def do_image_stimuli(self, stim, duration_ms):
     stim.draw(self.window)
     self.window.flip()
-
-    # convert to seconds by division
     core.wait(duration_ms / 1000.0)
+    self.window.flip()
 
   def do_sound_stimuli(self, stim, duration_ms):
     stim.play()
-
     core.wait(duration_ms / 1000.0)
+    stim.stop()
 
   def display(self):
     for trial_name in self.cfg.trial_order:
       trial = self.cfg.trials[trial_name]
+
+      if trial.ordering == 'random':
+        random.shuffle(self.loaded_stims[trial_name])
+
+      core.wait(trial.lead_in_time_ms / 1000.0)
 
       for loaded_stim in self.loaded_stims[trial_name]:
         self.signal(loaded_stim, 'pre')
@@ -75,6 +80,10 @@ class Stimuli(object):
 
         # post signal
         self.signal(loaded_stim, 'post')
+
+        core.wait(trial.transition_time_ms / 1000.0)
+
+      core.wait(trial.lead_out_time_ms / 1000.0)
 
   def __str__(self):
     return ('Pushing on channel %s for experiment %s.' 
