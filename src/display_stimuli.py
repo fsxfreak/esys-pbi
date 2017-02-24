@@ -43,6 +43,7 @@ class Stimuli(object):
         raise ValueError 
 
     # setup LSL 
+    # TODO generalize uid
     info = StreamInfo(self.LSL_STREAM_NAME, self.LSL_STREAM_TYPE,
         self.LSL_NUM_CHANNELS, self.LSL_SAMPLE_RATE, 'string', 'uid1')
     self.outlet = StreamOutlet(info)
@@ -62,6 +63,10 @@ class Stimuli(object):
     stim.stop()
 
   def display(self):
+    # send twice to wakeup the inlet streams
+    self.signal(None, 'EXPERIMENT_BEGIN')
+    self.signal(None, 'EXPERIMENT_BEGIN')
+
     for trial_name in self.cfg.trial_order:
       trial = self.cfg.trials[trial_name]
 
@@ -85,6 +90,8 @@ class Stimuli(object):
 
       core.wait(trial.lead_out_time_ms / 1000.0)
 
+    self.signal(None, 'EXPERIMENT_END')
+
   def __str__(self):
     return ('Pushing on channel %s for experiment %s.' 
             % (self.LSL_STREAM_NAME, self.cfg.name))
@@ -93,6 +100,7 @@ class Stimuli(object):
     self.window.close()
 
 def load(cfg_filename):
+  global stim
   stim = Stimuli(cfg_filename)
 
 def start():
@@ -116,8 +124,10 @@ def stop():
   gc.collect()
 
 def main():
-  stim = Stimuli('../stimulus-config/test.yml')
-  stim.display()
+  # TODO generalize to command line args
+  global stim
+  load('../stimulus-config/test.yml')
+  start()
 
 if __name__ == '__main__':
   main()

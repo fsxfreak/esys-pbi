@@ -1,15 +1,22 @@
-import sys
+from multiprocessing import Process, Queue
+import signal, time
 
-import capture_stream as cap
-import display_stimuli as disp 
+import capture_stream
+import display_stimuli
 
 def main():
-  cap.load()
-  ds.load(sys.argv[1]) 
+  stimuli = Process(target=display_stimuli, args=())
+  bci = Process(target=capture_stream, args=())
+  stimuli.start()
+  bci.start()
 
-  cap.start()
-  sys.wait(1.0)
-  ds.start()
+  time.sleep(5)
+  
+  stimuli.terminate()
+  bci.terminate()
+
+  stimuli.join()
+  bci.join()
 
   input('press enter to terminate')
   cap.stop()
