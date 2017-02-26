@@ -1,7 +1,7 @@
 from pylsl import StreamInlet, resolve_byprop, local_clock, TimeoutError
 from bci import open_bci_v3 as bci
 
-import signal, sys, os
+import signal, sys, os, time
 import serial
 import threading
 
@@ -9,6 +9,7 @@ import threading
 import display_stimuli as ds
 
 board = None
+samples_lock = threading.Lock()
 
 class Board(object):
   def __init__(self):
@@ -36,7 +37,11 @@ class Board(object):
       try:
         if timestamp is not None and sample is not None:
           timestamp = timestamp + self.inlet.time_correction(timeout=0) 
+
+          samples_lock.acquire()
           self.samples.append(('STIM', timestamp, sample))
+          samples_lock.release()
+
       except TimeoutError:
         pass
 
@@ -46,13 +51,16 @@ class Board(object):
   def _bci_sample(self, sample):
     NUM_CHANNELS = 8
     data = sample.channel_data[0:NUM_CHANNELS]
+
+    samples_lock.acquire()
     self.samples.append(('BCI', local_clock(), data))
+    samples_lock.release()
 
   def _record_bci(self):
     try:
       self.board.start_streaming(self._bci_sample)
     except:
-      print('Serial exception. Hopefully you\'re terminating.')
+      print('Got a serial exception. Expected behavior if experiment ending.')
       
 
   def capture(self):
@@ -65,12 +73,13 @@ class Board(object):
     self.board.stop()
     self.board.disconnect()
     self.running = False
+
     print('time to stop running')
+    self.bci_thread.join(5)
+    self.lsl_thread.join(5)
+    print('Joined threads, now outputting data.')
 
-    self.bci_thread.join()
-    self.lsl_thread.join()
-
-    f = open('data.txt', 'w+')
+    f = open('data/data-%s.txt' % str(time.time()), 'w+')
 
     for sample in self.samples:
       f.write(str(sample))
@@ -85,9 +94,13 @@ class Board(object):
     self.board.disconnect()
     self.inlet.close_stream()
 
-def load():
+def load(queue):
   global board
-  board = Board()
+  try:
+    board = Board()
+  except:
+    if queue is not None:
+      queue.put('FAIL')
 
 def start():
   board.capture()
@@ -100,12 +113,22 @@ def sigint_handler(signal, frame):
   stop()
 
 def sigterm_handler(signal, frame):
+  print('BCI got terminate signal, now terminating threads.')
   stop()
 
 def main():
   signal.signal(signal.SIGINT, sigint_handler)
   signal.signal(signal.SIGTERM, sigterm_handler)
   load()
+  start()
+
+  signal.pause()
+
+def begin(queue):
+  signal.signal(signal.SIGTERM, sigterm_handler)
+
+  load(queue)
+  queue.put('CONNECTED')
   start()
 
   signal.pause()

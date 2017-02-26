@@ -1,5 +1,4 @@
-import gc
-import random
+import gc, random, sys
 import pylsl
 
 from pylsl import StreamInfo, StreamOutlet
@@ -66,6 +65,8 @@ class Stimuli(object):
     # send twice to wakeup the inlet streams
     self.signal(None, 'EXPERIMENT_BEGIN')
     self.signal(None, 'EXPERIMENT_BEGIN')
+    self.signal(None, 'EXPERIMENT_BEGIN')
+    self.signal(None, 'EXPERIMENT_BEGIN')
 
     for trial_name in self.cfg.trial_order:
       trial = self.cfg.trials[trial_name]
@@ -125,9 +126,27 @@ def stop():
 
 def main():
   # TODO generalize to command line args
-  global stim
   load('../stimulus-config/test.yml')
+
   start()
+
+  if len(sys.argv) > 1:
+    msg_queue = sys.argsv[1]
+    msg_queue.put('FINISHED')
+
+# to be called from multiprocessing
+def begin(queue):
+  # TODO generalize to command line args
+  load('../stimulus-config/test.yml')
+
+  while True:
+    msg = queue.get()
+    if msg == 'BEGIN':
+      break
+
+  start()
+
+  queue.put('FINISHED')
 
 if __name__ == '__main__':
   main()
