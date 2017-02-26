@@ -82,7 +82,12 @@ class Board(object):
     f = open('data/data-%s.txt' % str(time.time()), 'w+')
 
     for sample in self.samples:
-      f.write(str(sample))
+      signal_type, timestamp, datas = sample
+      d = ''
+      for data in datas:
+        print(data)
+        d += str(data) + ' '
+      f.write(signal_type + ' ' +  str(timestamp) + ' ' + d)
       f.write('\n')
 
     f.close()
