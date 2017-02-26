@@ -1,7 +1,7 @@
 from pylsl import StreamInlet, resolve_byprop, local_clock, TimeoutError
 from bci import open_bci_v3 as bci
 
-import signal, sys, os, time
+import signal, sys, os, time, csv
 import serial
 import threading
 
@@ -79,18 +79,20 @@ class Board(object):
     self.lsl_thread.join(5)
     print('Joined threads, now outputting data.')
 
-    f = open('data/data-%s.txt' % str(time.time()), 'w+')
+    i = 0
+    while os.path.exists("data/data-%s.xml" % i):
+      i += 1
 
-    for sample in self.samples:
-      signal_type, timestamp, datas = sample
-      d = ''
-      for data in datas:
-        print(data)
-        d += str(data) + ' '
-      f.write(signal_type + ' ' +  str(timestamp) + ' ' + d)
-      f.write('\n')
-
-    f.close()
+    # csv writer with stim_type, msg, and timestamp, then data
+    with open('data/data-%s.csv' % i, 'w+') as f:
+      writer = csv.writer(f)
+      writer.writerow(('Signal Type', 'Msg', 'Time', 'Channel 1', 'Channel 2', 'Channel 3', 'Channel 4', 'Channel 5', 'Channel 6', 'Channel 7', 'Channel 8' ))
+      for sample in self.samples:
+        signal_type, timestamp, datas = sample
+        out = (signal_type, 'msg', timestamp)
+        for data in datas:
+          out = out + (data,)
+        writer.writerow(out)
 
   def __str__(self):
     return '%s EEG channels' % board.getNbEEGChannels()
