@@ -65,7 +65,6 @@ class Board(object):
     self.board.stop()
     self.board.disconnect()
     self.running = False
-    print('time to stop running')
 
     self.bci_thread.join()
     self.lsl_thread.join()
