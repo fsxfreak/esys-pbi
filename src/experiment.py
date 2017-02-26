@@ -1,6 +1,8 @@
 from multiprocessing import Process, Queue
 import signal, time, sys
 
+from time import sleep
+
 import capture_stream
 import display_stimuli
 
