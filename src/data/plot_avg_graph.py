@@ -41,7 +41,7 @@ for run,trials in enumerate(os.listdir(path)):
 			   
 			   if vals[0]=='STIM':
 				msg = vals[len(vals)-1]
-				if msg == 'pre':
+				if msg == 'pre\n':
 					marker.append(num)
 					y.append(y[len(y)-1])
 
