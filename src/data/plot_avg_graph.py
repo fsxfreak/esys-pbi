@@ -15,7 +15,7 @@ channel = 3
 current_path = os.path.dirname(os.path.abspath(__file__))
 path = current_path + '\\BCI_data\\'
 
-#convert txt to csv
+'''#convert txt to csv
 for trial_no, trials in enumerate(os.listdir(path)):
 	output_csv = "data-" + str(trial_no) + ".csv"
 	with open('%s%s' %(path,trials),'r') as input_f:
@@ -27,6 +27,7 @@ for trial_no, trials in enumerate(os.listdir(path)):
 			with open(out_path,'w') as csvfile:
 				writer = csv.writer(csvfile)
 				writer.writerows(lines)	
+'''
 
 
 #plot individual graph directly from text file
@@ -35,19 +36,20 @@ for run,trials in enumerate(os.listdir(path)):
 	sample_num = []
 	marker = []
 	with open('%s%s' %(path,trials),'r') as input_f:
-		for num, row in enumerate(input_f):
-			if not num == 0:
-			   vals = row.split(',')
-			   
-			   if vals[0]=='STIM':
-				msg = vals[len(vals)-1]
-				if msg == 'pre\n':
-					marker.append(num)
-					y.append(y[len(y)-1])
+	  	csv_f = csv.reader(input_f)
+		#for num, row in enumerate(input_f):
+		for num, vals in enumerate(csv_f):
+			   if not vals == 0:
+			   #vals = row.split(',')
+				   if vals[0]=='STIM':
+					msg = vals[len(vals)-1]
+					if msg == 'pre\n':
+						marker.append(num)
+						y.append(y[len(y)-1])
 
-			   if vals[0]=='BCI':
-				y1 = vals[channel+2]
-				y.append(float(y1)) 
+				   if vals[0]=='BCI':
+					y1 = vals[channel+2]
+					y.append(float(y1)) 
 	
 	sample_num = [i for i in range(len(y))]
 	sample_tot.append(sample_num) 
