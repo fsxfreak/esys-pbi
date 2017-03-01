@@ -26,14 +26,42 @@ trials:
         # Ordering by number before the first underscore
         ordering: numeric
     two:  
-        lead_in_time_ms: 333
-        duration_time_ms: 1000 
-        transition_time_ms: 125
-        lead_out_time_ms: 2500
+        lead_in_time_ms: 500
+        duration_time_ms: 2000 
+        transition_time_ms: 2250
+# TODO randomized transition time range
+        lead_out_time_ms: 500
         stimuli_type: sounds
         stimuli_folder: stimuli/sound_test
-        ordering: random
-
+        ordering: numeric
+    three:  
+        lead_in_time_ms: 500
+        duration_time_ms: 2000 
+        transition_time_ms: 2250
+# TODO randomized transition time range
+        lead_out_time_ms: 500
+        stimuli_type: sounds
+        stimuli_folder: stimuli/sound_test2
+        ordering: numeric
 trial_order:
-    - one
     - two
+    - two
+    - two
+    - two
+    - two
+    - two
+    - two
+    - two
+    - two
+    - two
+    - two
+    - two
+    - two
+    - two
+    - two
+    - two
+    - two
+    - two
+    - two
+    - two
+# TODO specify number of times multiplier?

@@ -1,10 +1,11 @@
 import matplotlib.pyplot as plt
+import csv
 
 def main():
   ys = []
   xs = []
   markers_on = []
-  with open('data-1488086058.01.txt', 'r') as f:
+  with open('data-0.csv', 'r') as f:
     for i, line in enumerate(f):
       vals = line.split()
       y = vals[2]
