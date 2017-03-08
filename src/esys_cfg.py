@@ -29,7 +29,15 @@ class ExperimentConfig(object):
     for trial_name in trials:
       self.trials[trial_name] = TrialConfig(trials[trial_name])
 
-    self.trial_order = trial_order
+    self.trial_order = []
+    for trial in trial_order:
+      tokens = trial.split()
+      trial_name = tokens[0]
+      if len(tokens) > 1:
+        freq = tokens[1]
+        for i in range(int(freq)):
+          self.trial_order.append(trial_name)
+      self.trial_order.append(trial_name)
 
   def __str__(self):
     return ('%s\n\tTrials: %s\n\tOrder: %s' %

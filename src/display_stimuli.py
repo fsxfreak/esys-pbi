@@ -63,10 +63,10 @@ class Stimuli(object):
 
   def display(self):
     # send twice to wakeup the inlet streams
-    self.signal(None, 'EXPERIMENT_BEGIN')
-    self.signal(None, 'EXPERIMENT_BEGIN')
-    self.signal(None, 'EXPERIMENT_BEGIN')
-    self.signal(None, 'EXPERIMENT_BEGIN')
+    self.signal('EXPERIMENT_BEGIN', 'EXPERIMENT_BEGIN')
+    self.signal('EXPERIMENT_BEGIN', 'EXPERIMENT_BEGIN')
+    self.signal('EXPERIMENT_BEGIN', 'EXPERIMENT_BEGIN')
+    self.signal('EXPERIMENT_BEGIN', 'EXPERIMENT_BEGIN')
 
     for trial_name in self.cfg.trial_order:
       trial = self.cfg.trials[trial_name]
@@ -91,7 +91,7 @@ class Stimuli(object):
 
       core.wait(trial.lead_out_time_ms / 1000.0)
 
-    self.signal(None, 'EXPERIMENT_END')
+    self.signal('EXPERIMENT_END', 'EXPERIMENT_END')
 
   def __str__(self):
     return ('Pushing on channel %s for experiment %s.' 

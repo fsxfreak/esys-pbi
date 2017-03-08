@@ -1,5 +1,7 @@
 --- !ExperimentConfig
 name: Experiment Name
+# TODO image size
+# TODO fixation image?
 
 trials:
     one:
@@ -27,8 +29,8 @@ trials:
         ordering: numeric
     two:  
         lead_in_time_ms: 500
-        duration_time_ms: 2000 
-        transition_time_ms: 2250
+        duration_time_ms: 100
+        transition_time_ms: 4500
 # TODO randomized transition time range
         lead_out_time_ms: 500
         stimuli_type: sounds
@@ -44,24 +46,5 @@ trials:
         stimuli_folder: stimuli/sound_test2
         ordering: numeric
 trial_order:
-    - two
-    - two
-    - two
-    - two
-    - two
-    - two
-    - two
-    - two
-    - two
-    - two
-    - two
-    - two
-    - two
-    - two
-    - two
-    - two
-    - two
-    - two
-    - two
-    - two
+    - two 10
 # TODO specify number of times multiplier?

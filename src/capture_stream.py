@@ -5,11 +5,11 @@ import signal, sys, os, time, csv
 import serial
 import threading
 
-# useful LSL constants
-import display_stimuli as ds
-
 board = None
 samples_lock = threading.Lock()
+
+LSL_STREAM_NAME = 'psychopy'
+LSL_STREAM_TYPE = 'marker'
 
 class Board(object):
   def __init__(self):
@@ -17,12 +17,12 @@ class Board(object):
                                   daisy=False)
 
     # setup LSL
-    streams = resolve_byprop('name', ds.Stimuli.LSL_STREAM_NAME, timeout=2.5)
+    streams = resolve_byprop('name', LSL_STREAM_NAME, timeout=2.5)
     try:
       self.inlet = StreamInlet(streams[0])
     except IndexError:
       raise ValueError('Make sure stream name="%s", is opened first.'
-          % ds.Stimuli.LSL_STREAM_NAME)
+          % LSL_STREAM_NAME)
 
     self.running = True
     self.samples = []
@@ -62,7 +62,6 @@ class Board(object):
     except:
       print('Got a serial exception. Expected behavior if experiment ending.')
       
-
   def capture(self):
     self.bci_thread = threading.Thread(target=self._record_bci)
     self.lsl_thread = threading.Thread(target=self._record_lsl)
@@ -80,7 +79,7 @@ class Board(object):
     print('Joined threads, now outputting data.')
 
     i = 0
-    while os.path.exists("data/data-%s.xml" % i):
+    while os.path.exists("data/data-%s.csv" % i):
       i += 1
 
     # csv writer with stim_type, msg, and timestamp, then data
@@ -102,9 +101,10 @@ class Board(object):
     self.inlet.close_stream()
 
 def load(queue):
-  global board
   try:
+    global board
     board = Board()
+    print('init board')
   except:
     if queue is not None:
       queue.put('FAIL')
@@ -126,7 +126,7 @@ def sigterm_handler(signal, frame):
 def main():
   signal.signal(signal.SIGINT, sigint_handler)
   signal.signal(signal.SIGTERM, sigterm_handler)
-  load()
+  load(queue=None)
   start()
 
   signal.pause()
