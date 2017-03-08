@@ -31,12 +31,12 @@ class Board(object):
   # runtime on this slave, not the host
   def _record_lsl(self):
     while self.running:
-      sample, timestamp = self.inlet.pull_sample(timeout=0)
+      sample, timestamp = self.inlet.pull_sample(timeout=5)
 
       # time correction to sync to local_clock()
       try:
         if timestamp is not None and sample is not None:
-          timestamp = timestamp + self.inlet.time_correction(timeout=0) 
+          timestamp = timestamp + self.inlet.time_correction(timeout=5) 
 
           samples_lock.acquire()
           self.samples.append(('STIM', timestamp, sample))
