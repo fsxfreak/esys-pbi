@@ -21,7 +21,7 @@ class Stimuli(object):
     self.cfg = esys_cfg.create_config(cfg_filename)
 
     # psychopy setup
-    self.window = visual.Window([1024, 512])
+    self.window = visual.Window(self.cfg.resolution)
 
     # preload all of stimuli, in sorted order
     self.loaded_stims = {}
@@ -87,7 +87,9 @@ class Stimuli(object):
         # post signal
         self.signal(loaded_stim, 'post')
 
-        core.wait(trial.transition_time_ms / 1000.0)
+        random_wait = random.randint(-trial.transition_time_variation_ms,
+                                      trial.transition_time_variation_ms)
+        core.wait(trial.transition_time_ms / 1000.0 + random_wait / 1000.0)
 
       core.wait(trial.lead_out_time_ms / 1000.0)
 

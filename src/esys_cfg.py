@@ -22,8 +22,10 @@ class TrialConfig(object):
     return self.stimuli_folder
 
 class ExperimentConfig(object):
-  def __init__(self, name, trials, trial_order):
+  def __init__(self, name, resolution, trials, trial_order):
     self.name = name
+
+    self.resolution = resolution
 
     self.trials = {}
     for trial_name in trials:

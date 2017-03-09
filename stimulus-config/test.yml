@@ -1,7 +1,11 @@
 --- !ExperimentConfig
 name: Experiment Name
-# TODO image size
 # TODO fixation image?
+
+# width and height of image display window
+resolution:
+    - 512
+    - 512
 
 trials:
     one:
@@ -13,6 +17,9 @@ trials:
 
         # delay between the end of a stimuli and the beginning of another
         transition_time_ms: 1000 
+
+        # Uniform random +/- adjustment of transition_time_ms, for every step 
+        transition_time_variation_ms: 500
 
         # delay after the end of a stimuli and the end of the trial
         lead_out_time_ms: 500
@@ -30,8 +37,8 @@ trials:
     two:  
         lead_in_time_ms: 500
         duration_time_ms: 100
-        transition_time_ms: 4500
-# TODO randomized transition time range
+        transition_time_ms: 200
+        transition_time_variation_ms: 2000
         lead_out_time_ms: 500
         stimuli_type: sounds
         stimuli_folder: stimuli/sound_test
@@ -40,11 +47,10 @@ trials:
         lead_in_time_ms: 500
         duration_time_ms: 2000 
         transition_time_ms: 2250
-# TODO randomized transition time range
+        transition_time_variation_ms: 500
         lead_out_time_ms: 500
         stimuli_type: sounds
         stimuli_folder: stimuli/sound_test2
         ordering: numeric
 trial_order:
     - two 10
-# TODO specify number of times multiplier?
