@@ -64,9 +64,13 @@ class Stimuli(object):
   def display(self):
     # send twice to wakeup the inlet streams
     self.signal('EXPERIMENT_BEGIN', 'EXPERIMENT_BEGIN')
+    core.wait(0.5)
     self.signal('EXPERIMENT_BEGIN', 'EXPERIMENT_BEGIN')
+    core.wait(0.5)
     self.signal('EXPERIMENT_BEGIN', 'EXPERIMENT_BEGIN')
+    core.wait(0.5)
     self.signal('EXPERIMENT_BEGIN', 'EXPERIMENT_BEGIN')
+    core.wait(0.5)
 
     for trial_name in self.cfg.trial_order:
       trial = self.cfg.trials[trial_name]
