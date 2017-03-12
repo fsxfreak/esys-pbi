@@ -1,0 +1,42 @@
+# OS generated files #
+.DS_Store
+Thumbs.db
+
+# python generated files #
+*.pyc
+*.pstats
+
+# binaries #
+*.so
+
+#cython build files
+*.c
+
+# user generated files will be ignored if in directory named 'recordings...' #
+# user generated settings files will also be ignored #
+recordings/
+capture_settings/
+service_settings/
+player_settings/
+settings/
+*.db
+*.npy
+*.png
+*.log
+
+
+# IDE generated files #
+.floo
+.flooignore
+*.sublime-project
+*.sublime-workspace
+
+#directory for test file will be ignored
+Pupil_Test_Files
+detector_2d.cpp
+detector_3d.cpp
+CircleGoodnessTest.cpp
+SphereCircleTest.cpp
+*.mp4
+*.mkv
+*.egg-info
