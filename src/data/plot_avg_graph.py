@@ -1,6 +1,8 @@
 ##plot_avg_graph
 ##1. set channel to be analyzed
 ##2. ensure data is saved in BCI_data folder of directory the script is running from  
+##3. set gain (1,2,4,6,8,12,24) where 24X is 0.02235 microVolts per count
+##4. sampling frequency, fs = 250 Hz
 
 import os
 import matplotlib.pyplot as plt
@@ -11,6 +13,9 @@ y_tot = []
 sample_tot = []
 markers_all = []
 channel = 3
+gain = 24
+scaleFactor = 4.5/gain/(2**23 - 1)
+fs = 250
 
 current_path = os.path.dirname(os.path.abspath(__file__))
 path = current_path + '\\BCI_data\\'
@@ -43,23 +48,23 @@ for run,trials in enumerate(os.listdir(path)):
 			   #vals = row.split(',')
 				   if vals[0]=='STIM':
 					msg = vals[len(vals)-1]
-					if msg == 'pre\n':
+					if 'pre' in msg:
 						marker.append(num)
-						y.append(y[len(y)-1])
+						y.append(y[len(y)-1]*scaleFactor)
 
 				   if vals[0]=='BCI':
 					y1 = vals[channel+2]
-					y.append(float(y1)) 
+					y.append(float(y1)*scaleFactor) 
 	
 	sample_num = [i for i in range(len(y))]
-	sample_tot.append(sample_num) 
+	sample_tot.append(np.divide(sample_num,250)) 
 	y_tot.append(y)
 	markers_all.append(marker)
 
 for i in range(run+1):
 	plt.figure(1)
 	plt.plot(sample_tot[i],y_tot[i],'b-', marker='o', markerfacecolor = 'r', markevery=markers_all[i], markersize = 20)
-
+'''
 #to calculate and plot the average graph
 #checking if there is more than 1 trial for data to be averaged
 if run > 1:
@@ -88,9 +93,9 @@ if run > 1:
 #saves csv file of averaged signal values (debug purposes)
 ylist = np.asarray(y_avg)
 np.savetxt("y_avg.csv",ylist,delimiter=",")
-
+'''
 	
 plt.title('Individual and Averaged sample data')
-plt.xlabel('Number of Samples')
-plt.ylabel('Amplitude')
+plt.xlabel('Time (s)')
+plt.ylabel('Voltage (uV)')
 plt.show()
