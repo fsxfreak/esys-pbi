@@ -13,7 +13,8 @@ LSL_STREAM_TYPE = 'marker'
 
 class Board(object):
   def __init__(self):
-    self.board = bci.OpenBCIBoard(port='/dev/ttyUSB0', filter_data=True,
+    # check device manager for correct COM port.
+    self.board = bci.OpenBCIBoard(port='COM3', filter_data=True,
                                   daisy=False)
 
     # setup LSL
@@ -113,13 +114,13 @@ def start():
 
 def stop():
   board.export_data()
+  print('Finished exporting data.')
   os._exit(0) # dirty, but it's ok because everything is already cleaned up
 
 def sigint_handler(signal, frame):
   stop()
 
 def sigterm_handler(signal, frame):
-  print('BCI got terminate signal, now terminating threads.')
   stop()
 
 def main():
@@ -130,14 +131,24 @@ def main():
 
   signal.pause()
 
-def begin(queue):
+def begin(queue, event=None):
+  signal.signal(signal.SIGINT, sigint_handler)
   signal.signal(signal.SIGTERM, sigterm_handler)
 
   load(queue)
   queue.put('CONNECTED')
   start()
 
-  signal.pause()
+  try:
+    while True:
+      signal.pause()
+  except AttributeError:
+    # signal.pause() not implemented on windows
+    while not event.is_set():
+      time.sleep(1)
+
+    print('event was set, stopping')
+    stop()
 
 if __name__ == '__main__':
   main()
