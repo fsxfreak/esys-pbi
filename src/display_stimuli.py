@@ -61,7 +61,7 @@ class Stimuli(object):
     core.wait(duration_ms / 1000.0)
     stim.stop()
 
-  def display(self):
+  def display(self, event):
     # send twice to wakeup the inlet streams
     self.signal('EXPERIMENT_BEGIN', 'EXPERIMENT_BEGIN')
     core.wait(0.5)
@@ -73,6 +73,12 @@ class Stimuli(object):
     core.wait(0.5)
 
     for trial_name in self.cfg.trial_order:
+      try:
+        if event.is_set():
+          return
+      except:
+        pass
+
       trial = self.cfg.trials[trial_name]
 
       if trial.ordering == 'random':
@@ -110,7 +116,7 @@ def load(cfg_filename):
   global stim
   stim = Stimuli(cfg_filename)
 
-def start():
+def start(event):
   '''
   Precondition: load(cfg_file) must have been called prior to calling
                 this function, to preload all stimuli.
@@ -119,7 +125,7 @@ def start():
     print('Call the load(cfg_filename) function first to initialize stim.')
     raise TypeError
 
-  stim.display()
+  stim.display(event)
 
 def stop():
   if stim is None:
@@ -141,7 +147,7 @@ def main():
     msg_queue.put('FINISHED')
 
 # to be called from multiprocessing
-def begin(queue):
+def begin(queue, event=None):
   # TODO generalize to command line args
   load('../stimulus-config/test.yml')
 
@@ -150,7 +156,7 @@ def begin(queue):
     if msg == 'BEGIN':
       break
 
-  start()
+  start(event)
 
   queue.put('FINISHED')
 

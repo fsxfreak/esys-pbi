@@ -26,7 +26,7 @@ class Graph(object):
           timestamp = timestamp + self.inlet.time_correction(timeout=5) 
 
         # TODO Place graphing stuff here
-        print(sample, timestamp)
+        #print(sample, timestamp)
 
       except TimeoutError:
         pass

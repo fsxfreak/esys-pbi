@@ -9,7 +9,6 @@ import threading
 board = None
 samples_lock = threading.Lock()
 
-
 class Board(object):
   LSL_STREAM_NAME = 'psychopy'
 
@@ -94,7 +93,7 @@ class Board(object):
       i += 1
 
     # csv writer with stim_type, msg, and timestamp, then data
-    with open('data/data-%s.csv' % i, 'w+') as f:
+    with open('data/BCI/data-%s.csv' % i, 'w+') as f:
       writer = csv.writer(f)
       writer.writerow(('Signal Type', 'Msg', 'Time', 'Channel 1', 'Channel 2', 'Channel 3', 'Channel 4', 'Channel 5', 'Channel 6', 'Channel 7', 'Channel 8' ))
       for sample in self.samples:
