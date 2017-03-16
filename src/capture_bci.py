@@ -1,4 +1,5 @@
 from pylsl import StreamInlet, resolve_byprop, local_clock, TimeoutError
+from pylsl import StreamInfo, StreamOutlet
 from bci import open_bci_v3 as bci
 
 import signal, sys, os, time, csv
@@ -8,16 +9,20 @@ import threading
 board = None
 samples_lock = threading.Lock()
 
-LSL_STREAM_NAME = 'psychopy'
-LSL_STREAM_TYPE = 'marker'
 
 class Board(object):
+  LSL_STREAM_NAME = 'psychopy'
+
+  LSL_BCI_STREAM_NAME = 'bci'
+  LSL_BCI_NUM_CHANNELS = 8
+  LSL_BCI_SAMPLE_RATE = 0 #
+
   def __init__(self):
     self.board = bci.OpenBCIBoard(port='/dev/ttyUSB0', filter_data=True,
                                   daisy=False)
 
     # setup LSL
-    streams = resolve_byprop('name', LSL_STREAM_NAME, timeout=2.5)
+    streams = resolve_byprop('name', self.LSL_STREAM_NAME, timeout=2.5)
     try:
       self.inlet = StreamInlet(streams[0])
     except IndexError:
@@ -26,6 +31,10 @@ class Board(object):
 
     self.running = True
     self.samples = []
+
+    info = StreamInfo(self.LSL_BCI_STREAM_NAME, 'eeg', 
+        self.LSL_BCI_NUM_CHANNELS, self.LSL_BCI_SAMPLE_RATE, 'float32', 'uid2')
+    self.outlet = StreamOutlet(info)
 
   # LSL and BCI samples are synchronized to local_clock(), which is the
   # runtime on this slave, not the host
@@ -55,6 +64,8 @@ class Board(object):
     samples_lock.acquire()
     self.samples.append(('BCI', local_clock(), data))
     samples_lock.release()
+
+    self.outlet.push_sample(data)
 
   def _record_bci(self):
     try:
