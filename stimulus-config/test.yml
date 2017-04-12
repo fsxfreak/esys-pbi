@@ -1,12 +1,9 @@
 --- !ExperimentConfig
 name: Experiment Name
-# TODO fixation image?
-
 # width and height of image display window
 resolution:
     - 512
     - 512
-
 trials:
     one:
         # initial delay before displaying the first stimuli of the trial
@@ -34,6 +31,9 @@ trials:
         # numeric gives '1_c.png', 2_a.png', '3_b.png', '4_z.png'..
         # Ordering by number before the first underscore
         ordering: numeric
+
+        # valid types: none, follow_all
+        fixation: follow_all
     two:  
         lead_in_time_ms: 500
         duration_time_ms: 100
@@ -43,6 +43,7 @@ trials:
         stimuli_type: sounds
         stimuli_folder: stimuli/sound_test
         ordering: numeric
+        fixation: follow_all 
     three:  
         lead_in_time_ms: 500
         duration_time_ms: 2000 
@@ -52,5 +53,11 @@ trials:
         stimuli_type: sounds
         stimuli_folder: stimuli/sound_test2
         ordering: numeric
+        fixation: none
 trial_order:
     - two 10
+
+# valid orderings: numeric, random
+# numeric will follow the order specified in trial_order, random will
+# preserve number of trials but have random order (TODO)
+ordering: numeric
