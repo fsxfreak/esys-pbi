@@ -32,8 +32,11 @@ trials:
         # Ordering by number before the first underscore
         ordering: numeric
 
-        # valid types: none, follow_all
-        fixation: follow_all
+        # valid fixation_types: none, follow_all
+        fixation_type: follow_all
+
+        # time that the fixation is active
+        fixation_duration_time_ms: 1000
     two:  
         lead_in_time_ms: 500
         duration_time_ms: 100

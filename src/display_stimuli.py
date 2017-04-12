@@ -61,8 +61,23 @@ class Stimuli(object):
     core.wait(duration_ms / 1000.0)
     stim.stop()
 
+  def trigger_stimuli(self, stim_type, stim, duration_ms):
+    self.signal(stim, 'pre')
+
+    if stim_type == 'images':
+      self.do_image_stimuli(stim, duration_ms)
+    elif stim_type == 'sounds':
+      self.do_sound_stimuli(stim, duration_ms)
+
+    # post signal
+    self.signal(loaded_stim, 'post')
+
+  def transition_time(self, transition_time_ms, variation_ms):
+    random_wait = random.randint(-variation_ms, varition_ms)
+    core.wait(transition_time_ms / 1000.0 + random_wait / 1000.0)
+
   def display(self):
-    # send twice to wakeup the inlet streams
+    # send many times to get a handshake
     self.signal('EXPERIMENT_BEGIN', 'EXPERIMENT_BEGIN')
     core.wait(0.5)
     self.signal('EXPERIMENT_BEGIN', 'EXPERIMENT_BEGIN')
@@ -81,20 +96,18 @@ class Stimuli(object):
       core.wait(trial.lead_in_time_ms / 1000.0)
 
       for loaded_stim in self.loaded_stims[trial_name]:
-        self.signal(loaded_stim, 'pre')
+        self.trigger_stimuli(trial.stimuli_type, loaded_stim, 
+            trial.duration_time_ms)
+        self.transition_time(trial.transition_time_ms,
+                             trial.transition_time_variation_ms)
 
-        if trial.stimuli_type == 'images':
-          self.do_image_stimuli(loaded_stim, trial.duration_time_ms)
-        elif trial.stimuli_type == 'sounds':
-          self.do_sound_stimuli(loaded_stim, trial.duration_time_ms)
-
-        # post signal
-        self.signal(loaded_stim, 'post')
-
-        random_wait = random.randint(-trial.transition_time_variation_ms,
-                                      trial.transition_time_variation_ms)
-        core.wait(trial.transition_time_ms / 1000.0 + random_wait / 1000.0)
-
+        if trial.fixation_type == 'follow_all':
+          # TODO add proper fixation stimuli
+          self.trigger_stimuli(trial.stimuli_type, None,
+              trial.duration_time_ms)
+          self.transition_time(trial.transition_time_ms,
+                               trial.transition_time_variation_ms)
+      
       core.wait(trial.lead_out_time_ms / 1000.0)
 
     self.signal('EXPERIMENT_END', 'EXPERIMENT_END')
