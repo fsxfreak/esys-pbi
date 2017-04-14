@@ -88,7 +88,7 @@ class Stimuli(object):
     core.wait(0.5)
 
     for trial_name in self.cfg.trial_order:
-      try:
+      try: # termination handling for windows
         if event.is_set():
           return
       except:
@@ -153,13 +153,14 @@ def main():
   # TODO generalize to command line args
   load('../stimulus-config/test.yml')
 
-  start()
+  start(None)
 
   if len(sys.argv) > 1:
     msg_queue = sys.argsv[1]
     msg_queue.put('FINISHED')
 
 # to be called from multiprocessing
+# event should be filled if on Windows, otherwise None
 def begin(queue, event=None):
   # TODO generalize to command line args
   load('../stimulus-config/test.yml')
