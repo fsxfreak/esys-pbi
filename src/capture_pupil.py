@@ -123,7 +123,11 @@ class PupilTracker(object):
     return 'Pupil tracker listening to %s' % self.ipc_sub_url
 
   def __del__(self):
-    self.inlet.close_stream()
+    try:
+      self.inlet.close_stream()
+    except AttributeError:
+      raise AttributeError('self.inlet does not exist. Most likely the LSL stimuli stream was not opened yet.')
+
     self.pupil_proc.terminate()
 
 def load(queue):
