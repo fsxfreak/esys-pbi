@@ -24,10 +24,10 @@ class Graph(object):
     self.sampleinterval = (1/self.frequency)
     self.timewindow = 10
     self._bufsize = int(self.timewindow/self.sampleinterval)
-    self.dataBuffer = collections.deque([0.0]*self._bufsize,self._bufsize)
-    self.timeBuffer = collections.deque([0.0]*self._bufsize,self._bufsize)
-    self.x = np.zeros(self._bufsize,dtype='float64')
-    self.y = np.zeros(self._bufsize,dtype='float64')
+    self.dataBuffer = collections.deque([0.0] * self._bufsize, self._bufsize)
+    self.timeBuffer = collections.deque([0.0] * self._bufsize, self._bufsize)
+    self.x = np.empty(self._bufsize,dtype='float64')
+    self.y = np.empty(self._bufsize,dtype='float64')
     self.app = QtGui.QApplication([])
     self.plt = pg.plot(title='EEG data from OpenBCI')
     self.plt.resize(*size)
@@ -45,14 +45,15 @@ class Graph(object):
 
   def _graph_lsl(self):
     while self.running:
+      # initial run
       self.sample, self.timestamp = self.inlet.pull_sample(timeout=5)
+      if self.timeBuffer[0] == 0.0:
+        self.timeBuffer = collections.deque([self.timestamp] * self._bufsize, self._bufsize)
 
       # time correction to sync to local_clock()
       try:
         if self.timestamp is not None and self.sample is not None:
           self.timestamp = self.timestamp + self.inlet.time_correction(timeout=5) 
-          
-        print(self.sample, self.timestamp)
 
       except TimeoutError:
         pass
@@ -65,6 +66,12 @@ class Graph(object):
     self.y[:] = self.dataBuffer
     self.timeBuffer.append(self.timestamp)
     self.x[:] = self.timeBuffer
+
+    if len(self.x):
+      print(self.x[0])
+    else:
+      print('no data yet')
+
     self.curve.setData(self.x,self.y)
     self.app.processEvents()
 

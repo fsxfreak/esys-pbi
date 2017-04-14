@@ -146,9 +146,6 @@ def launcher(queue):
     ipc_push_url = pull_socket.last_endpoint.decode('utf8').replace("0.0.0.0","127.0.0.1")
 
     queue.put(ipc_sub_url)
-    print(ipc_pub_url)
-    print(ipc_sub_url)
-    print(ipc_push_url)
 
     # Starting communication threads:
     # A ZMQ Proxy Device serves as our IPC Backbone

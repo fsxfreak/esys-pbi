@@ -1,4 +1,5 @@
 from multiprocessing import Process, Queue
+import subprocess # to call python3 code
 import signal, time, sys
 
 from time import sleep
@@ -8,15 +9,18 @@ import capture_bci
 import display_stimuli
 import graph_realtime
 
-def stop(stimuli, bci, graph):
+def stop(stimuli, bci, graph, pupil=None):
   print('Terminating from the main thread...')
   stimuli.terminate()
   bci.terminate()
-  # pupil.terminate()
   graph.terminate()
 
+  if pupil:
+    pupil.terminate()
+
 def sigint_handler(signal, frame):
-  stop()
+  # TODO bad fix
+  stop(None, None, None)
 
 def main():
   signal.signal(signal.SIGINT, sigint_handler)
@@ -27,7 +31,6 @@ def main():
 
   stimuli = Process(target=display_stimuli.begin, args=((stim_queue), ))
   bci = Process(target=capture_bci.begin, args=((bci_queue), ))
-  # pupil = Process(target=capture_puil.begin, args=((pupil_queue), ))
   graph = Process(target=graph_realtime.begin, args=((None), ))
 
   stimuli.start()
@@ -35,46 +38,40 @@ def main():
   time.sleep(1)
   print('Initializing sensors...')
   bci.start()
-  # pupil.start() TODO python3 start?
 
   bci_ready = False
-  pupil_ready = True # TODO
 
-  # Wait for the sensors to initialize before starting the experiment
+  # Wait for the BCI to initialize before starting the experiment
   while True:
     bci_msg = bci_queue.get()
     # TODO pupil_msg
     pupil_msg = None
     if bci_msg:
       print('bci_msg', bci_msg)
-    if pupil_msg:
-      print('pupil_msg', pupil_msg)
 
     if bci_msg == 'CONNECTED':
       bci_ready = True
       print('BCI connected, starting realtime graph...')
       graph.start()
-    elif pupil_msg == 'CONNECTED':
-      pupil_ready = True
     elif bci_msg == 'FAIL':
-      stimuli.terminate()
-      bci.terminate()
-      # pupil.terminate()
-      graph.terminate()
-
-      sys.exit(-1)
-    elif pupil_msg == 'FAIL':
-      stimuli.terminate()
-      bci.terminate()
-      # pupil.terminate()
-      graph.terminate()
-
+      stop(stimuli, bci, graph, None)
       sys.exit(-1)
 
     # TODO wait for pupil_ready?
-    if bci_ready and pupil_ready:
-      stim_queue.put('BEGIN')
+    if bci_ready:
       break
+
+  # open pupil process
+  pupil = None
+  '''
+  pupil = subprocess.Popen(['sudo', 'python3', 'capture_pupil.py'],
+                           stdout=subprocess.PIPE)
+  while True:
+    pass
+    # TODO wait or the magic 'CONNECTED' from capture_pupil.main
+  '''
+
+  stim_queue.put('BEGIN')
 
   # Wait for the stimuli to finish displaying before stopping sensor capture
   while True:
@@ -82,16 +79,15 @@ def main():
       stim_msg = stim_queue.get()
       print('stim', stim_msg)
     except InterruptedError:
-      stop(stimuli, bci, graph)
+      stop(stimuli, bci, graph, pupil)
       break
 
     if (stim_msg == 'FINISHED'):
-      stop()
+      stop(stimuli, bci, graph, pupil)
       break
 
   stimuli.join()
   bci.join()
-  # pupil.join()
   graph.join()
 
 if __name__ == '__main__':

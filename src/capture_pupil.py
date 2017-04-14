@@ -23,16 +23,14 @@ class PupilTracker(object):
     self.pupil_proc = Process(target=pupil_capture.alternate_launch,
                               args=((pupil_queue), ))
     self.pupil_proc.start()
-    print('started pupil proc')
 
     while True:
       pupil_msg = pupil_queue.get()
+      print(pupil_msg)
       if 'tcp' in pupil_msg:
         self.ipc_sub_url = pupil_msg
       if 'EYE_READY' in pupil_msg:
         break
-
-    print('got eye ready')
 
     context = zmq.Context()
     self.socket = zmq.Socket(context, zmq.SUB)
@@ -45,7 +43,7 @@ class PupilTracker(object):
         break
       elif status['event'] == zmq.EVENT_CONNECT_DELAYED:
         pass
-    print('Connected to pupil on url %s.' % self.ipc_sub_url)
+    print('Capturing from pupil on url %s.' % self.ipc_sub_url)
     self.socket.subscribe('pupil')
 
     # setup LSL
@@ -157,6 +155,10 @@ def main():
   signal.signal(signal.SIGINT, sigint_handler)
   signal.signal(signal.SIGTERM, sigterm_handler)
   load(queue=None)
+
+  # Required message for subprocess comms
+  print('CONNECTED')
+
   start()
 
   signal.pause()

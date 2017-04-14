@@ -46,7 +46,7 @@ trials:
         stimuli_type: sounds
         stimuli_folder: stimuli/sound_test
         ordering: numeric
-        fixation: follow_all 
+        fixation_type: follow_all 
     three:  
         lead_in_time_ms: 500
         duration_time_ms: 2000 
@@ -56,9 +56,9 @@ trials:
         stimuli_type: sounds
         stimuli_folder: stimuli/sound_test2
         ordering: numeric
-        fixation: none
+        fixation_type: none
 trial_order:
-    - two 10
+    - one 50
 
 # valid orderings: numeric, random
 # numeric will follow the order specified in trial_order, random will

@@ -70,10 +70,10 @@ class Stimuli(object):
       self.do_sound_stimuli(stim, duration_ms)
 
     # post signal
-    self.signal(loaded_stim, 'post')
+    self.signal(stim, 'post')
 
   def transition_time(self, transition_time_ms, variation_ms):
-    random_wait = random.randint(-variation_ms, varition_ms)
+    random_wait = random.randint(-variation_ms, variation_ms)
     core.wait(transition_time_ms / 1000.0 + random_wait / 1000.0)
     
   def display(self, event):
@@ -107,12 +107,14 @@ class Stimuli(object):
         self.transition_time(trial.transition_time_ms,
                              trial.transition_time_variation_ms)
 
+        '''
         if trial.fixation_type == 'follow_all':
           # TODO add proper fixation stimuli
           self.trigger_stimuli(trial.stimuli_type, None,
               trial.duration_time_ms)
           self.transition_time(trial.transition_time_ms,
                                trial.transition_time_variation_ms)
+        '''
       
       core.wait(trial.lead_out_time_ms / 1000.0)
 
