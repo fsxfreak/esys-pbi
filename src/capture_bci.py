@@ -9,7 +9,6 @@ import threading
 board = None
 samples_lock = threading.Lock()
 
-
 class Board(object):
   LSL_STREAM_NAME = 'psychopy'
 
@@ -18,7 +17,8 @@ class Board(object):
   LSL_BCI_SAMPLE_RATE = 0 #
 
   def __init__(self):
-    self.board = bci.OpenBCIBoard(port='/dev/ttyUSB0', filter_data=True,
+    # check device manager for correct COM port.
+    self.board = bci.OpenBCIBoard(port='COM3', filter_data=True,
                                   daisy=False)
 
     # setup LSL
@@ -93,7 +93,7 @@ class Board(object):
       i += 1
 
     # csv writer with stim_type, msg, and timestamp, then data
-    with open('data/data-%s.csv' % i, 'w+') as f:
+    with open('data/BCI/data-%s.csv' % i, 'w+') as f:
       writer = csv.writer(f)
       writer.writerow(('Signal Type', 'Msg', 'Time', 'Channel 1', 'Channel 2', 'Channel 3', 'Channel 4', 'Channel 5', 'Channel 6', 'Channel 7', 'Channel 8' ))
       for sample in self.samples:
@@ -124,13 +124,13 @@ def start():
 
 def stop():
   board.export_data()
+  print('Finished exporting data.')
   os._exit(0) # dirty, but it's ok because everything is already cleaned up
 
 def sigint_handler(signal, frame):
   stop()
 
 def sigterm_handler(signal, frame):
-  print('BCI got terminate signal, now terminating threads.')
   stop()
 
 def main():
@@ -141,14 +141,24 @@ def main():
 
   signal.pause()
 
-def begin(queue):
+def begin(queue, event=None):
+  signal.signal(signal.SIGINT, sigint_handler)
   signal.signal(signal.SIGTERM, sigterm_handler)
 
   load(queue)
   queue.put('CONNECTED')
   start()
 
-  signal.pause()
+  try:
+    while True:
+      signal.pause()
+  except AttributeError:
+    # signal.pause() not implemented on windows
+    while not event.is_set():
+      time.sleep(1)
+
+    print('event was set, stopping')
+    stop()
 
 if __name__ == '__main__':
   main()

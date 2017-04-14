@@ -51,8 +51,7 @@ class Graph(object):
       try:
         if self.timestamp is not None and self.sample is not None:
           self.timestamp = self.timestamp + self.inlet.time_correction(timeout=5) 
-
-        # TODO Place graphing stuff here
+          
         print(self.sample, self.timestamp)
 
       except TimeoutError:
@@ -76,7 +75,6 @@ class Graph(object):
   def stop(self):
     self.running = False
     self.lsl_thread.join(5)
-    # Place any graphing termination or cleanup here
 
 def load(queue):
   global graph
