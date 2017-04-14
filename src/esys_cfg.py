@@ -1,5 +1,6 @@
 import yaml
 import re
+import random
 
 from os import listdir
 from os.path import isfile, join
@@ -22,7 +23,7 @@ class TrialConfig(object):
     return self.stimuli_folder
 
 class ExperimentConfig(object):
-  def __init__(self, name, resolution, trials, trial_order):
+  def __init__(self, name, resolution, trials, trial_order, ordering):
     self.name = name
 
     self.resolution = resolution
@@ -41,9 +42,15 @@ class ExperimentConfig(object):
           self.trial_order.append(trial_name)
       self.trial_order.append(trial_name)
 
+    self.ordering = ordering 
+
+    if self.ordering == 'random':
+      print('random order')
+      random.shuffle(self.trial_order)
+
   def __str__(self):
-    return ('%s\n\tTrials: %s\n\tOrder: %s' %
-        (self.name, self.trials, self.trial_order))
+    return ('%s\n\tTrials: %s\n\tOrder: %s, Ordering type: %s' %
+        (self.name, self.trials, self.trial_order, self.ordering))
 
 def experiment_config_construct(loader, node):
   instance = ExperimentConfig.__new__(ExperimentConfig)
