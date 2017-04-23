@@ -107,15 +107,14 @@ class Stimuli(object):
         self.transition_time(trial.transition_time_ms,
                              trial.transition_time_variation_ms)
 
-        '''
         if trial.fixation_type == 'follow_all':
           # TODO add proper fixation stimuli
-          self.trigger_stimuli(trial.stimuli_type, None,
-              trial.duration_time_ms)
+          self.fixation = visual.ShapeStim(self.window,
+                            vertices=((0.5,0),(-0.5,0),(0,0),(0,0.5),(0,-0.5)),lineWidth=3, closeShape=False, lineColor="white",size=0.1)
+          self.trigger_stimuli(trial.stimuli_type, self.fixation,
+                            trial.duration_time_ms)
           self.transition_time(trial.transition_time_ms,
                                trial.transition_time_variation_ms)
-        '''
-      
       core.wait(trial.lead_out_time_ms / 1000.0)
 
     self.signal('EXPERIMENT_END', 'EXPERIMENT_END')
