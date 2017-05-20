@@ -18,7 +18,7 @@ class Board(object):
 
   def __init__(self):
     # check device manager for correct COM port.
-    self.board = bci.OpenBCIBoard(port='/dev/ttyUSB0', filter_data=True,
+    self.board = bci.OpenBCIBoard(port='COM3', filter_data=True,
                                   daisy=False)
 
     # setup LSL
@@ -155,7 +155,8 @@ def begin(queue, event=None):
       signal.pause()
   except AttributeError:
     # signal.pause() not implemented on windows
-    while not event.is_set():
+#   while not event.is_set():
+    while not event:
       time.sleep(1)
 
     print('event was set, stopping')

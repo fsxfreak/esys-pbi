@@ -35,7 +35,7 @@ class Graph(object):
     self.plt.setLabel('left','Amplitude','V')
     self.plt.setLabel('bottom','Time','s')
     self.curve = self.plt.plot(self.x,self.y,pen=(255,0,0))
-    self.sample=[0.0]
+    self.sample = np.zeros(8)
     self.timestamp = 0.0
 
     #QTimer
@@ -62,7 +62,7 @@ class Graph(object):
     self.inlet.close_stream()
 
   def update(self):
-    self.dataBuffer.append(self.sample[0])
+    self.dataBuffer.append(self.sample[3])
     self.y[:] = self.dataBuffer
     self.timeBuffer.append(self.timestamp)
     self.x[:] = self.timeBuffer
@@ -129,7 +129,8 @@ def begin(queue, event=None):
       signal.pause()
   except AttributeError:
     # signal.pause() not implemented on windows
-    while not event.is_set():
+   # while not event.is_set():
+    while not event:
       time.sleep(1)
 
     print('event was set, stopping')
