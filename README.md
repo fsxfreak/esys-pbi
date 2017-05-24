@@ -8,4 +8,14 @@ Experimental system synchronizing OpenBCI EEG and EKG, pupillabs and theeyetribe
 * theeyetribe c++ lib, I assume it's been installed into the path, 
   ```/usr/local/lib``` and include files into 
   ```/usr/local/include/tet```
+  
+# Device Management
+ *look at the device manager to find the appropriate COM port. Change the port number for your device in 'capture_bci.py', line 21. 
+ 
+# Changing Parameters of fixation
+  *All changes to the fixation parameters can be done in the test.yaml file. 
+  
+
+  
+  
 
