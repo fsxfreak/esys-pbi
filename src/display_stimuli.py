@@ -32,11 +32,14 @@ class Stimuli(object):
       if stimuli_type == 'images':
         self.loaded_stims[trial_name] = [ visual.ImageStim(self.window, 
                                             '%s%s' % (path_prefix, stim_file)) 
-                                          for stim_file in trial.files ]
+                                          for stim_file in trial.files[:-1]]
+        self.fix_file = visual.ImageStim(self.window,'%s%s' %(path_prefix, trial.files[-1]))
+
       elif stimuli_type == 'sounds':
         self.loaded_stims[trial_name] = [ sound.Sound(
                                             '%s%s' % (path_prefix, stim_file))
-                                          for stim_file in trial.files ]
+                                          for stim_file in trial.files[:-1]]
+        self.fix_file = sound.Sound('%s%s' % (path_prefix, trial.files[-1]))
       else:
         print('Unsupported stimuli_type: %s' % stimuli_type)
         raise ValueError 
@@ -54,7 +57,7 @@ class Stimuli(object):
     stim.draw(self.window)
     self.window.flip()
     core.wait(duration_ms / 1000.0)
-    self.window.flip()
+    #self.window.flip()
 
   def do_sound_stimuli(self, stim, duration_ms):
     stim.play()
@@ -75,6 +78,28 @@ class Stimuli(object):
   def transition_time(self, transition_time_ms, variation_ms):
     random_wait = random.randint(-variation_ms, variation_ms)
     core.wait(transition_time_ms / 1000.0 + random_wait / 1000.0)
+
+  def select_fixation(self, fixation_source):
+    if fixation_source == 'default':
+    # TODO add proper fixation stimuli
+      self.fixation = visual.ShapeStim(self.window,
+	    vertices=((0.5,0),(-0.5,0),(0,0),(0,0.5),(0,-0.5)),lineWidth=3, closeShape=False, lineColor="white",size=0.1)
+    elif fixation_source == 'stim_folder':
+      self.fixation = self.fix_file
+
+  def run_fixation(self, stimuli_type, duration_time_ms, transition_time_ms, transition_time_variation_ms, fixation_type, fix_stim_interval):
+    if fixation_type != 'none':  
+      if fixation_type == 'margin':
+	self.trigger_stimuli(stimuli_type, self.fixation,
+	duration_time_ms)
+	self.transition_time(transition_time_ms,
+	transition_time_variation_ms)
+      if self.count == fix_stim_interval:
+        self.trigger_stimuli(stimuli_type, self.fixation,
+        duration_time_ms)
+        self.transition_time(transition_time_ms,
+        transition_time_variation_ms)
+        self.count = 0
     
   def display(self, event):
     # send many times to get a handshake
@@ -87,8 +112,7 @@ class Stimuli(object):
     self.signal('EXPERIMENT_BEGIN', 'EXPERIMENT_BEGIN')
     core.wait(0.5)
 
-    counter = 0
-    stim_no = 6
+    self.count = 0
 
     for trial_name in self.cfg.trial_order:
       try: # termination handling for windows
@@ -98,28 +122,30 @@ class Stimuli(object):
         pass
 
       trial = self.cfg.trials[trial_name]
+      self.select_fixation(trial.fixation_source)
+      # display fixation at start of trial (if selected)
+      self.run_fixation(trial.stimuli_type, trial.duration_time_ms, 
+                         trial.transition_time_ms, trial.transition_time_variation_ms, trial.fixation_type, None)
 
       if trial.ordering == 'random':
         random.shuffle(self.loaded_stims[trial_name])
 
       core.wait(trial.lead_in_time_ms / 1000.0)
-
+     
       for loaded_stim in self.loaded_stims[trial_name]:
         self.trigger_stimuli(trial.stimuli_type, loaded_stim, 
             trial.duration_time_ms)
         self.transition_time(trial.transition_time_ms,
                              trial.transition_time_variation_ms)
-        counter = counter + 1
-
-        if counter%stim_no == 0:
-	  if trial.fixation_type == 'follow_all':
-	   # TODO add proper fixation stimuli
-	   self.fixation = visual.ShapeStim(self.window,
-			    vertices=((0.5,0),(-0.5,0),(0,0),(0,0.5),(0,-0.5)),lineWidth=3, closeShape=False, lineColor="white",size=0.1)
-	   self.trigger_stimuli(trial.stimuli_type, self.fixation,
-			    trial.duration_time_ms)
-	   self.transition_time(trial.transition_time_ms,
-			       trial.transition_time_variation_ms)
+        if trial.fix_stim_interval > 0:
+	  #keeps track of number of stimuli being displayed (for purpose of fixation)
+	  self.count = self.count + 1
+	  #display fixation at set intervals (if selected)
+	  self.run_fixation(trial.stimuli_type, trial.duration_time_ms, 
+	          trial.transition_time_ms, trial.transition_time_variation_ms, None, trial.fix_stim_interval)
+      #display fixation at end of trial (if selected)  
+      self.run_fixation(trial.stimuli_type, trial.duration_time_ms, 
+                         trial.transition_time_ms, trial.transition_time_variation_ms, trial.fixation_type, None)
       core.wait(trial.lead_out_time_ms / 1000.0)
 
     self.signal('EXPERIMENT_END', 'EXPERIMENT_END')

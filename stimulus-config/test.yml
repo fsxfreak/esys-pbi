@@ -32,8 +32,16 @@ trials:
         # Ordering by number before the first underscore
         ordering: numeric
 
-        # valid fixation_types: none, follow_all
-        fixation_type: follow_all
+        # valid fixation_types: 'none' (no fixation) 
+        # 'margin' (fixation before and after a trial), set fix_stim_interval to 0 if only 'margin' is needed 
+        # 'follow_stim' (fixation set by fix_stim_interval), use if only fixation following stimuli is needed without margin 
+        fixation_type: margin
+
+        # valid source types: default (generate from program), stim_folder (chosen image or sound file)
+        fixation_source: default 
+
+        # number of stimuli to display before next fixation. Valid types: (any integer)
+        fix_stim_interval: 2
 
         # time that the fixation is active
         fixation_duration_time_ms: 1000
@@ -46,7 +54,10 @@ trials:
         stimuli_type: sounds
         stimuli_folder: stimuli/sound_test
         ordering: numeric
-        fixation_type: follow_all 
+        fixation_type: none
+        fixation_source: stim_folder
+        fix_stim_interval: 5
+        fixation_duration_time_ms: 1000 
     three:  
         lead_in_time_ms: 500
         duration_time_ms: 2000 
@@ -57,6 +68,9 @@ trials:
         stimuli_folder: stimuli/sound_test2
         ordering: numeric
         fixation_type: none
+        fixation_source: stim_folder
+        fixation_duration_time: 1000
+        fix_stim_interval: 5
 trial_order:
     - one 50
 
