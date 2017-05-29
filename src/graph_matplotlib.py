@@ -105,7 +105,7 @@ class Graph(object):
     plt.pause(0.01)
     print('closing graphing utility')
     self.inlet.close_stream()
-
+  '''
   def update(self):
     self.dataBuffer.append(self.sample[3])
     self.y[:] = self.dataBuffer
@@ -119,10 +119,11 @@ class Graph(object):
 
     self.curve.setData(self.x,self.y)
     self.app.processEvents()
-
+  '''
   def start(self):
-    self.lsl_thread = threading.Thread(target=self._graph_lsl)
-    self.lsl_thread.start()
+    #self.lsl_thread = threading.Thread(target=self._graph_lsl)
+    #self.lsl_thread.start()
+    self._graph_lsl()
   
   def stop(self):
     self.running = False
