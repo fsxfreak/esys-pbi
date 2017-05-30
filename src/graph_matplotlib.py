@@ -57,9 +57,9 @@ class Graph(object):
     plt.ion()
     plt.hold(False)     
     self.lineHandle = plt.plot(self.SecondTimes, self.ProcessedSig)
-    plt.title("Streaming Live EMG Data")
+    plt.title("Live Stream EEG Data")
     plt.xlabel('Time (s)')
-    plt.ylabel('Volts')
+    plt.ylabel('mV')
     plt.show()
     #while(1):
     #secondTimes.append(serialData[0])                         #add time stamps to array 'timeValSeconds'
@@ -84,21 +84,24 @@ class Graph(object):
       except TimeoutError:
         pass
       self.SecondTimes.append(self.timestamp)                         #add time stamps to array 'timeValSeconds'
-      self.ProcessedSig.append(self.sample[3])                           #add processed signal values to 'processedSig'
+      print(abs(self.sample[3])/1000)
+      self.ProcessedSig.append(abs(self.sample[3])/1000)                           #add processed signal values to 'processedSig'
     
       self.count = self.count + 1
       #plt.show()
-      if((self.count % 20 == 0) and (self.count != 0)):   #every 20 samples (ie ~ 0.10 s) is when plot updates
+      if((self.count % 20 == 0) and (self.count != 0)):   #every 20 samples (ie ~ 0.2 ms) is when plot updates
+      #if(self.count == 20):
+        #self.count = 0
 	self.lineHandle[0].set_ydata(self.ProcessedSig)
 	self.lineHandle[0].set_xdata(self.SecondTimes)
 	#plt.xlim(0, 5)
 	plt.xlim(self.SecondTimes[0], self.SecondTimes[-1])
-	plt.ylim(0, 10)
+	plt.ylim(0, 5)
 	plt.pause(0.01)
       
       
       
-      if(self.count >= 399): 
+      if(self.count >= 511):        #shows up to 2 seconds of data (512 samples = 2s of data given a 256 Hz (BCI) sampling freq)
         self.ProcessedSig.pop(0)    
         self.SecondTimes.pop(0)
 
