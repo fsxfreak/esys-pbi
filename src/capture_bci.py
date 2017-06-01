@@ -89,18 +89,27 @@ class Board(object):
     print('Joined threads, now outputting BCI data.')
 
     i = 0
-    while os.path.exists("data/BCI/data-%s.csv" % i):
+    folder = '/data/BCI/'
+    folder_path = os.getcwd() + folder
+    #new folders data/BCI will be created in current directory (where experiment.py is saved) if they don't exist
+    if not os.path.exists(folder_path):
+      os.makedirs(folder_path)
+
+    file_path = os.path.normpath(folder_path + 'data-%s.csv')
+
+    while os.path.exists(file_path % i):
       i += 1
 
     # csv writer with stim_type, msg, and timestamp, then data
-    with open('data/BCI/data-%s.csv' % i, 'w+') as f:
-      writer = csv.writer(f)
-      writer.writerow(('Signal Type', 'Msg', 'Time', 'Channel 1', 'Channel 2', 'Channel 3', 'Channel 4', 'Channel 5', 'Channel 6', 'Channel 7', 'Channel 8' ))
-      for sample in self.samples:
+    with open(file_path % i, 'w+') as f:
+        writer = csv.writer(f)
+        writer.writerow(('Signal Type', 'Msg', 'Time', 'Channel 1', 'Channel 2', 'Channel 3', 'Channel 4', 'Channel 5', 'Channel 6', 'Channel 7', 'Channel 8' ))
+
+    for sample in self.samples:
         signal_type, timestamp, datas = sample
         out = (signal_type, 'msg', timestamp)
-        for data in datas:
-          out = out + (data,)
+    for data in datas:
+        out = out + (data,)
         writer.writerow(out)
 
   def __str__(self):

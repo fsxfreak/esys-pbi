@@ -7,7 +7,7 @@ from time import sleep
 import capture_bci
 # import capture_pupil
 import display_stimuli
-import graph_realtime
+import graph_matplotlib
 
 def stop(stimuli, bci, graph, pupil=None):
   print('Terminating from the main thread...')
@@ -31,7 +31,7 @@ def main():
 
   stimuli = Process(target=display_stimuli.begin, args=((stim_queue), ))
   bci = Process(target=capture_bci.begin, args=((bci_queue), ))
-  graph = Process(target=graph_realtime.begin, args=((None), ))
+  graph = Process(target=graph_matplotlib.begin, args=((None), ))
 
   stimuli.start()
   print('Waiting a bit for the stimuli to load...')
