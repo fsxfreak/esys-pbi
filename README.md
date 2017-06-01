@@ -14,6 +14,13 @@ Experimental system synchronizing OpenBCI EEG and EKG, pupillabs and theeyetribe
  
 # Changing Parameters of fixation
   *All changes to the fixation parameters can be done in the test.yaml file. 
+
+# Where data is stored
+A 'data' folder will be created in the directory where code (specifically experiment.py) is saved. 
+'BCI' subfolder will be created in 'data' to store any data from OpenBCI.
+sample file names: 'data-0.csv', 'data-1.csv'
+reference code: capture_bci.py lines 92 to 113
+
   
 
   
