@@ -25,34 +25,11 @@ class Graph(object):
       raise ValueError('Make sure stream name=bci is opened first.')
    
     self.running = True
-    '''
-    self.frequency = 250.0
-    self.sampleinterval = (1/self.frequency)
-    self.timewindow = 10
-    self._bufsize = int(self.timewindow/self.sampleinterval)
-    self.dataBuffer = collections.deque([0.0] * self._bufsize, self._bufsize)
-    self.timeBuffer = collections.deque([0.0] * self._bufsize, self._bufsize)
-    self.x = np.empty(self._bufsize,dtype='float64')
-    self.y = np.empty(self._bufsize,dtype='float64')
-    self.app = QtGui.QApplication([])
-    self.plt = pg.plot(title='EEG data from OpenBCI')
-    self.plt.resize(*size)
-    self.plt.showGrid(x=True,y=True)
-    self.plt.setLabel('left','Amplitude','V')
-    self.plt.setLabel('bottom','Time','s')
-    self.curve = self.plt.plot(self.x,self.y,pen=(255,0,0))
-    self.sample = np.zeros(8)
-    self.timestamp = 0.0
-
-    #QTimer
-    self.timer = QtCore.QTimer()
-    self.timer.timeout.connect(self.update)
-    self.timer.start(self.sampleinterval)
-
-    '''
+    
     self.ProcessedSig = []
     self.SecondTimes = []
     self.count = -1
+    self.sampleCount = self.count 
 
     plt.ion()
     plt.hold(False)     
@@ -87,42 +64,30 @@ class Graph(object):
       print(abs(self.sample[3])/1000)
       self.ProcessedSig.append(abs(self.sample[3])/1000)                           #add processed signal values to 'processedSig'
     
+      self.sampleCount = self.sampleCount + 1  
       self.count = self.count + 1
       #plt.show()
       if((self.count % 20 == 0) and (self.count != 0)):   #every 20 samples (ie ~ 0.2 ms) is when plot updates
       #if(self.count == 20):
-        #self.count = 0
+        self.count = -1
 	self.lineHandle[0].set_ydata(self.ProcessedSig)
 	self.lineHandle[0].set_xdata(self.SecondTimes)
 	#plt.xlim(0, 5)
 	plt.xlim(self.SecondTimes[0], self.SecondTimes[-1])
 	plt.ylim(0, 5)
+        #plt.autoscale(True)
 	plt.pause(0.01)
       
       
       
-      if(self.count >= 511):        #shows up to 2 seconds of data (512 samples = 2s of data given a 256 Hz (BCI) sampling freq)
+      if(self.sampleCount >= 511):        #shows up to 2 seconds of data (512 samples = 2s of data given a 256 Hz (BCI) sampling freq)
         self.ProcessedSig.pop(0)    
         self.SecondTimes.pop(0)
 
     plt.pause(0.01)
     print('closing graphing utility')
     self.inlet.close_stream()
-  '''
-  def update(self):
-    self.dataBuffer.append(self.sample[3])
-    self.y[:] = self.dataBuffer
-    self.timeBuffer.append(self.timestamp)
-    self.x[:] = self.timeBuffer
 
-    if len(self.x):
-      print(self.x[0])
-    else:
-      print('no data yet')
-
-    self.curve.setData(self.x,self.y)
-    self.app.processEvents()
-  '''
   def start(self):
     #self.lsl_thread = threading.Thread(target=self._graph_lsl)
     #self.lsl_thread.start()
