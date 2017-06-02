@@ -9,11 +9,14 @@ import capture_bci
 import display_stimuli
 import graph_matplotlib
 
+event = Event()
+
 def stop(stimuli, bci, graph, pupil=None):
   print('Terminating from the main thread...')
   stimuli.terminate()
   bci.terminate()
   graph.terminate()
+  event.set()
 
   if pupil:
     pupil.terminate()
@@ -30,8 +33,8 @@ def main():
   # pupil_queue = Queue()
 
   stimuli = Process(target=display_stimuli.begin, args=((stim_queue), ))
-  bci = Process(target=capture_bci.begin, args=((bci_queue), ))
-  graph = Process(target=graph_matplotlib.begin, args=((None), ))
+  bci = Process(target=capture_bci.begin, args=((bci_queue), (event)))
+  graph = Process(target=graph_matplotlib.begin, args=((None),(event) ))
 
   stimuli.start()
   print('Waiting a bit for the stimuli to load...')

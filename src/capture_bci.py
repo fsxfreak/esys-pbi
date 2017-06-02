@@ -164,8 +164,8 @@ def begin(queue, event=None):
       signal.pause()
   except AttributeError:
     # signal.pause() not implemented on windows
-#   while not event.is_set():
-    while not event:
+    while not event.is_set():
+    #while not event:
       time.sleep(1)
 
     print('event was set, stopping')
