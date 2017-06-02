@@ -19,7 +19,17 @@ Experimental system synchronizing OpenBCI EEG and EKG, pupillabs and theeyetribe
   ```/usr/local/include/tet```
   
 ## Device Management
- *look at the device manager to find the appropriate COM port. Change the port number for your device in 'capture_bci.py', line 21. 
+ * look at the device manager to find the appropriate COM port. Change the port number for your device in 'capture_bci.py', line 21. 
+ 
+ ## Changing parameters of live-streaming signal display 
+  1. Editing the frequency at which display updates streaming data: see line 92 to change the number of samples (given a particular sammpling frequency) to be displayed before graph updates.
+  2. Editing the window of display for live-streaming data: see line 104 to change the number of samples (given a particular sammpling frequency) to be shown on the graph during a particular viewing window. 
+  3. Changing the y-axis limits on the display: see line 99. The first parameter sets the lowest y-limit and the second parameter sets the highest y-limit. 
+  4. Changing the x and y-axes labels on the display: see lines 60-62. 
+  5. Changing the set of data to be graphed on the display: see line 88. The channel holding the data that is desired to be graphed should be passed into the 'abs()' function. (ex: currently, the desired EEG data to be graphed is stored in 'self.sample[3]', which has been divided by 1000 to scale values to mV.) 
+  
+   * reference code: all graphing instructions can be found in graph_matplotlib.py, lines 73-109 and 57-63. 
+  
  
 ## Changing Parameters of fixation
 All changes to the fixation parameters can be done in the ```test.yaml``` file. 
