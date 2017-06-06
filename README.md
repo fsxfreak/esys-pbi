@@ -31,8 +31,10 @@ Experimental system synchronizing OpenBCI EEG and EKG, pupillabs and theeyetribe
    * reference code: all graphing instructions can be found in graph_matplotlib.py, lines 52-117. 
   
  
-## Changing Parameters of fixation
-All changes to the fixation parameters can be done in the ```test.yaml``` file. 
+## Trial Settings
+* All changes to trial parameters can be done in the ```test.yaml``` file in ```esys-pbi\stimulus-config``` directory.
+* Stimuli for a specific trial type must be stored in a folder in the ```esys-pbi\src\stimuli``` directory
+* All stimuli in a folder will be displayed except for the last file. The last file is a place holder for a chosen fixation stimuli (reference code: display_stimuli.py lines 33 to 42) 
 
 ## Data Storage
 * A ```data``` folder will be created in ```esys-pbi\src``` directory. 
