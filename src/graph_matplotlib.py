@@ -9,6 +9,7 @@ import serial
 import threading
 
 import matplotlib.pyplot as plt
+#import matplotlib.axes as ax
 
 numSamples = 0
 
@@ -30,6 +31,8 @@ class Graph(object):
     self.SecondTimes = []
     self.count = -1
     self.sampleCount = self.count 
+    self.maximum = 0
+    self.minimum = 0
 
     plt.ion()
     plt.hold(False)     
@@ -37,6 +40,7 @@ class Graph(object):
     plt.title("Live Stream EEG Data")
     plt.xlabel('Time (s)')
     plt.ylabel('mV')
+    #plt.autoscale(True, 'y', tight = True)
     plt.show()
     #while(1):
     #secondTimes.append(serialData[0])                         #add time stamps to array 'timeValSeconds'
@@ -63,24 +67,32 @@ class Graph(object):
       self.SecondTimes.append(self.timestamp)                         #add time stamps to array 'timeValSeconds'
       print(abs(self.sample[3])/1000)
       self.ProcessedSig.append(abs(self.sample[3])/1000)                           #add processed signal values to 'processedSig'
-    
+      if(abs(self.sample[3]/1000) > self.maximum):
+          self.maximum = abs(self.sample[3]/1000)
+      if(abs(self.sample[3]/1000) < self.minimum):
+          self.minimum = abs(self.sample[3]/1000)
+
       self.sampleCount = self.sampleCount + 1  
       self.count = self.count + 1
       #plt.show()
-      if((self.count % 20 == 0) and (self.count != 0)):   #every 20 samples (ie ~ 0.2 ms) is when plot updates
+      if((self.count % 20 == 0) and (self.count != 0)):   #every 20 samples (ie ~ 0.2 ms) is when plot updates. Change the sample number (ie 20) to modify frequency at which plot updates
       #if(self.count == 20):
         self.count = -1
 	self.lineHandle[0].set_ydata(self.ProcessedSig)
 	self.lineHandle[0].set_xdata(self.SecondTimes)
 	#plt.xlim(0, 5)
 	plt.xlim(self.SecondTimes[0], self.SecondTimes[-1])
-	plt.ylim(0, 5)
-        #plt.autoscale(True)
+        
+        plt.ylim(self.minimum - 0.75, self.maximum + 0.75)
+        #plt.ylim(0, 20)
+	#plt.ylim(0, 10)
+        #elf.ax.set_autoscaley_on(True)
+        #plt.autoscale(enable=True, axis='y', tight=True)
 	plt.pause(0.01)
       
       
       
-      if(self.sampleCount >= 511):        #shows up to 2 seconds of data (512 samples = 2s of data given a 256 Hz (BCI) sampling freq)
+      if(self.sampleCount >= 511):        #shows up to 2 seconds of data (512 samples = 2s of data given a 256 Hz sampling freq by the BCI)
         self.ProcessedSig.pop(0)    
         self.SecondTimes.pop(0)
 
