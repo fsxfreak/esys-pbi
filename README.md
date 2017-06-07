@@ -21,14 +21,14 @@ Experimental system synchronizing OpenBCI EEG and EKG, pupillabs and theeyetribe
 ## Device Management
  * look at the device manager to find the appropriate COM port. Change the port number for your device in 'capture_bci.py', line 21. 
  
- ## Changing parameters of live-streaming signal display 
-  1. Editing the frequency at which display updates streaming data: see line 72 to change the number of samples (given a particular sammpling frequency) to be displayed before graph updates.
-  2. Editing the window of display for live-streaming data: see line 89 to change the number of samples (given a particular sampling frequency) to be shown on the graph during a particular viewing window. 
-  3. Changing the y-axis limits on the display: see line 81. The first parameter (ie 0) sets the lowest y-limit and the second parameter sets the highest y-limit (ie 10). 
-  4. Changing the title, x and y-axes labels on the display: see lines 38-40. 
-  5. Changing the set of data to be graphed on the display: see line 67. The channel holding the data that is desired to be graphed should be passed into the 'abs()' function. (ex: currently, the desired EEG data to be graphed is stored in 'self.sample[3]', which has been divided by 1000 to scale values to mV.) 
+ ## Changing parameters to live-streaming signal graph 
+  1. To change how often the graph updates streaming data: see line 78 to change the number of samples (calcuated using the desired sammpling frequency) to be displayed before graph updates.
+  2. To change the window of display for live-streaming data: see line 95 to change the number of samples (caculated using the desired sampling frequency) to be shown on the graph during a particular viewing window. (currently set to show up to 2 s = 512 samples of data at a time)
+  3. To change the y-axis limits on the display: see line 87. The first parameter (ie 0) sets the lowest y-limit and the second parameter sets the highest y-limit (ie 10). If you would like to set your own y-limits instead of autoscaling the graph, uncomment line 87 and comment line 86. 
+  4. To change the title, x and y-axes labels on the display: see lines 40-42. 
+  5. To change the set of data to be graphed on the display: see line 69-73. The channel holding the array of data you want to graph should be passed into the 'abs()' function. (ex: currently, the desired EEG data to be graphed is stored in 'self.sample[3]', which has been divided by 1000 to scale values to mV.) Be sure to change the parameters (ie, change "self.sample[3]/1000" to the name of the array of data you want) in lines 71-73 to modify the autoscaling of the graph. 
   
-   * reference code: all graphing instructions can be found in graph_matplotlib.py, lines 52-117. 
+   * reference code: all graphing instructions can be found in graph_matplotlib.py, lines 20-124. 
   
  
 ## Trial Settings
@@ -41,6 +41,11 @@ Experimental system synchronizing OpenBCI EEG and EKG, pupillabs and theeyetribe
 * ```BCI``` subfolder will be created in ```esys-pbi\src\data``` to store any data from OpenBCI.
 * Sample file names: 'data-0.csv', 'data-1.csv'
 * Reference code: capture_bci.py lines 92 to 113
+
+## Attaching the Electrodes to yourself
+* the black cable is ground-- place on the forehead or boney area. 
+* the white cable is the reference electrode, place on the collarbone. 
+* the green cable will be streaming data into the array self.sample[3]-- place this electrode over the heart. 
 
   
 
