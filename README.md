@@ -12,14 +12,18 @@ Experimental system synchronizing OpenBCI EEG and EKG, pupillabs and theeyetribe
 
 ## Dependencies
 * See requirements.txt for pip depends. Install using pip2, and run using python2.
-* PupilLabs - See (pupil-depends)[https://github.com/pupil-labs/pupil/wiki/Dependencies-Installation-Linux]
+* PupilLabs - See [pupil-depends](https://github.com/pupil-labs/pupil/wiki/Dependencies-Installation-Linux)
 * PsychoPy - Unfortunately, python3 is not supported here yet.
 * theeyetribe c++ lib, I assume it's been installed into the path, 
   ```/usr/local/lib``` and include files into 
   ```/usr/local/include/tet```
   
-## Device Management
- * look at the device manager to find the appropriate COM port. Change the port number for your device in 'capture_bci.py', line 21. 
+## OpenBCI Setup and Device Management
+  1. Download the appropriate [Virtual COM Port Driver](http://www.ftdichip.com/Drivers/VCP.htm) for OpenBCI USB dongle 
+  2. Plug in the dongle and run the installer according to the instructions [here](https://learn.sparkfun.com/tutorials/how-to-install-ftdi-drivers/windows---in-depth) (for Windows) 
+
+  3. With USB dongle still plugged in, open ```Device Manager```. Under ```Ports (COM & LPT)``` find a ```USB Serial Port``` listing with ```(COM_)```
+  4. Change the port number in 'capture_bci.py', line 21. 
  
  ## Changing parameters to live-streaming signal graph 
   1. To change how often the graph updates streaming data: see line 78 to change the number of samples (calcuated using the desired sammpling frequency) to be displayed before graph updates.
@@ -42,7 +46,12 @@ Experimental system synchronizing OpenBCI EEG and EKG, pupillabs and theeyetribe
 * Sample file names: 'data-0.csv', 'data-1.csv'
 * Reference code: capture_bci.py lines 92 to 113
 
-## Attaching the Electrodes to yourself
+## Experiment Hardware Setup
+### Switching on OpenBCI
+1. Set knob on USB dongle to ```GPIO-6``` and not ```RESET```
+2. Set knob on OpenBCI board to ```PC```
+
+### Attaching Electrodes
 * the black cable is ground-- place on the forehead or boney area. 
 * the white cable is the reference electrode, place on the collarbone. 
 * the green cable will be streaming data into the array self.sample[3]-- place this electrode over the heart. 
