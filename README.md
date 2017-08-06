@@ -49,7 +49,10 @@ Experimental system synchronizing OpenBCI EEG and EKG, pupillabs and theeyetribe
 ## Experiment Hardware Setup
 ### Switching on OpenBCI
 1. Set knob on USB dongle to ```GPIO-6``` and not ```RESET```
+  <img src="/images/Dongle_connection.JPG" width="300" height="300">
+  
 2. Set knob on OpenBCI board to ```PC```
+  <img src="/images/BCI_board.JPG" width="400" height="300">
 
 ### Attaching Electrodes
 * the black cable is ground-- place on the forehead or boney area. 
