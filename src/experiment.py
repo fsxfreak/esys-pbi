@@ -1,4 +1,4 @@
-from multiprocessing import Process, Queue
+from multiprocessing import Process, Queue, Event
 import subprocess # to call python3 code
 import signal, time, sys
 
