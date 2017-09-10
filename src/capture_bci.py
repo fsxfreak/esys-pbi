@@ -104,12 +104,11 @@ class Board(object):
     with open(file_path % i, 'w+') as f:
       writer = csv.writer(f)
       writer.writerow(('Signal Type', 'Msg', 'Time', 'Channel 1', 'Channel 2', 'Channel 3', 'Channel 4', 'Channel 5', 'Channel 6', 'Channel 7', 'Channel 8' ))
-
       for sample in self.samples:
 	signal_type, timestamp, datas = sample
 	out = (signal_type, 'msg', timestamp)
-      for data in datas:
-	out = out + (data,)
+        for data in datas:
+	  out = out + (data,)
 	writer.writerow(out)
 
   def __str__(self):
