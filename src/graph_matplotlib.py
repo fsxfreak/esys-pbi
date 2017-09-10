@@ -65,7 +65,7 @@ class Graph(object):
       except TimeoutError:
         pass
       self.SecondTimes.append(self.timestamp)                         #add time stamps to array 'timeValSeconds'
-      print(abs(self.sample[3])/1000)
+      #print(abs(self.sample[3])/1000)
       self.ProcessedSig.append(abs(self.sample[3])/1000)                           #add processed signal values to 'processedSig'
       if(abs(self.sample[3]/1000) > self.maximum):
           self.maximum = abs(self.sample[3]/1000)
@@ -156,11 +156,10 @@ def begin(queue, event=None):
   except AttributeError:
     # signal.pause() not implemented on windows
    # while not event.is_set():
-    while not event:
+    while not event.is_set():
       time.sleep(1)
-
-    print('event was set, stopping')
-    stop()
+    print('event was set in graphing utility, stopping')
+  stop()
 
 if __name__ == '__main__':
   main()

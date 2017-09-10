@@ -83,7 +83,6 @@ class Board(object):
     self.board.stop()
     self.board.disconnect()
     self.running = False
-
     self.bci_thread.join(5)
     self.lsl_thread.join(5)
     print('Joined threads, now outputting BCI data.')
@@ -132,8 +131,9 @@ def load(queue):
 def start():
   board.capture()
 
-def stop():
+def stop(queue):
   board.export_data()
+  queue.put('SAVED_BCI')
   print('Finished exporting data.')
   os._exit(0) # dirty, but it's ok because everything is already cleaned up
 
@@ -166,11 +166,9 @@ def begin(queue, event=None):
   except AttributeError:
     # signal.pause() not implemented on windows
     while not event.is_set():
-    #while not event:
       time.sleep(1)
-
-    print('event was set, stopping')
-    stop()
+    print('event was set in bci, stopping')
+    stop(queue)
 
 if __name__ == '__main__':
   main()

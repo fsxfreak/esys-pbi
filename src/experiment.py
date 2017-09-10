@@ -1,6 +1,6 @@
 from multiprocessing import Process, Queue, Event
 import subprocess # to call python3 code
-import signal, time, sys
+import signal, time, sys, os
 
 from time import sleep
 
@@ -11,12 +11,20 @@ import graph_matplotlib
 
 event = Event()
 
-def stop(stimuli, bci, graph, pupil=None):
+def stop(stimuli, bci, graph, bci_queue, pupil=None):
   print('Terminating from the main thread...')
-  stimuli.terminate()
-  bci.terminate()
-  graph.terminate()
+  #termination handling for windows
   event.set()
+  while True:
+    if bci_queue is None or bci_queue.get() == 'SAVED_BCI' or os.name != 'nt':
+    #(in windows) 'SAVED_BCI' ensures data has saved before process termination
+      stimuli.terminate()
+      bci.terminate()
+      try:
+        graph.terminate()
+      except AttributeError:
+        pass
+      break
 
   if pupil:
     pupil.terminate()
@@ -82,11 +90,11 @@ def main():
       stim_msg = stim_queue.get()
       print('stim', stim_msg)
     except InterruptedError:
-      stop(stimuli, bci, graph, pupil)
+      stop(stimuli, bci, graph, bci_queue, pupil)
       break
 
     if (stim_msg == 'FINISHED'):
-      stop(stimuli, bci, graph, pupil)
+      stop(stimuli, bci, graph, bci_queue, pupil)
       break
 
   stimuli.join()
