@@ -5,7 +5,7 @@ from pylsl import StreamInfo, StreamOutlet
 from psychopy import prefs
 prefs.general['audioLib'] = ['pygame']
 from psychopy import visual, core, sound 
-
+import win32api as win
 import esys_cfg
 
 stim = None
@@ -181,6 +181,11 @@ def stop():
   del(stim)
   gc.collect()
 
+def win_handler(dwCtrlType):
+  if dwCtrlType in (0,2,6):
+    return 1
+  #return 0
+
 def main():
   # TODO generalize to command line args
   load('../stimulus-config/test.yml')
@@ -195,8 +200,11 @@ def main():
 # event should be filled if on Windows, otherwise None
 def begin(queue, event=None):
   # TODO generalize to command line args
-  load('../stimulus-config/test.yml')
+  if sys.platform == 'win32':
+    win.SetConsoleCtrlHandler(win_handler, 1)
 
+  load('../stimulus-config/test.yml')
+	   
   while True:
     msg = queue.get()
     if msg == 'BEGIN':

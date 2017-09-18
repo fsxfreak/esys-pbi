@@ -7,7 +7,7 @@ import time
 import signal, sys, os, time, csv
 import serial
 import threading
-
+import win32api as win
 import matplotlib.pyplot as plt
 #import matplotlib.axes as ax
 
@@ -129,6 +129,10 @@ def sigint_handler(signal, frame):
 def sigterm_handler(signal, frame):
   stop()
 
+def win_handler(dwCtrlType):
+  if dwCtrlType in (0,2,6):
+    return 1
+
 def main():
   signal.signal(signal.SIGINT, sigint_handler)
   signal.signal(signal.SIGTERM, sigterm_handler)
@@ -146,20 +150,22 @@ def main():
 def begin(queue, event=None):
   signal.signal(signal.SIGINT, sigint_handler)
   signal.signal(signal.SIGTERM, sigterm_handler)
-
+  
+  if sys.platform == 'win32':
+    win.SetConsoleCtrlHandler(win_handler, 1)
+  
   load(queue)
   start()
 
-  try:
-    while True:
+  while True:
+    try:
       signal.pause()
-  except AttributeError:
+    except AttributeError:
     # signal.pause() not implemented on windows
-   # while not event.is_set():
-    while not event.is_set():
-      time.sleep(1)
+      while not event.is_set():
+        time.sleep(1)
     print('event was set in graphing utility, stopping')
-  stop()
+    stop()
 
 if __name__ == '__main__':
   main()

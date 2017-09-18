@@ -5,7 +5,7 @@ from bci import open_bci_v3 as bci
 import signal, sys, os, time, csv
 import serial
 import threading
-
+import win32api as win
 board = None
 samples_lock = threading.Lock()
 
@@ -132,9 +132,9 @@ def start():
 
 def stop(queue):
   board.export_data()
-  queue.put('SAVED_BCI')
   print('Finished exporting data.')
-  os._exit(0) # dirty, but it's ok because everything is already cleaned up
+  queue.put('SAVED_BCI')
+  #os._exit(0) # dirty, but it's ok because everything is already cleaned up
 
 def sigint_handler(signal, frame):
   stop()
@@ -150,10 +150,18 @@ def main():
 
   signal.pause()
 
+def win_handler(dwCtrlhandler):
+  if dwCtrlhandler in (0,2,6):
+    return 1
+  #return 0
+
 def begin(queue, event=None):
   signal.signal(signal.SIGINT, sigint_handler)
   signal.signal(signal.SIGTERM, sigterm_handler)
-
+ 
+  if sys.platform == 'win32':
+    win.SetConsoleCtrlHandler(win_handler,1)
+  
   load(queue)
   queue.put('CONNECTED')
   start()
