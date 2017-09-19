@@ -41,10 +41,15 @@ Experimental system synchronizing OpenBCI EEG and EKG, pupillabs and theeyetribe
 * All stimuli in a folder will be displayed except for the last file. The last file is a place holder for a chosen fixation stimuli (reference code: display_stimuli.py lines 33 to 42) 
 
 ## Data Storage
-* A ```data``` folder will be created in ```esys-pbi\src``` directory. 
-* ```BCI``` subfolder will be created in ```esys-pbi\src\data``` to store any data from OpenBCI.
+### Location
+* A ```recorded_data``` folder will be created in ```esys-pbi\src``` directory. 
+* ```BCI``` subfolder will be created in ```esys-pbi\src\recorded_data``` to store any data from OpenBCI.
 * Sample file names: 'data-0.csv', 'data-1.csv'
 * Reference code: capture_bci.py lines 92 to 113
+### Additional Information
+* Data will be saved in a file at the end of the experiment terminating normally.
+* End the experiment early by pressing ```Ctrl-C``` or closing the command window and data will be saved automatically. 
+* Data currently **DOES NOT** get automatically saved during a shutdown or other power outage event. 
 
 ## Experiment Hardware Setup
 ### Switching on OpenBCI
