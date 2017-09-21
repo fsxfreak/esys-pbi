@@ -64,6 +64,12 @@ Experimental system synchronizing OpenBCI EEG and EKG, pupillabs and theeyetribe
 * the white cable is the reference electrode, place on the collarbone. 
 * the green cable will be streaming data into the array self.sample[3]-- place this electrode over the heart. 
 
+# Running the Experiment
+1. Open a command-line interpreter like "Command Prompt" on Windows
+2. Navigate to the location "experiment.py" is stored (path: ```esys-pbi/src```). For instance, type ```cd Desktop/esys-pbi/src``` and hit Enter. 
+3. Ensure changes to experiment settings have been made. (Refer to Trial Settings above)
+4. To run the experiment type: ```python experiment.py``` and hit Enter.  
+
   
 
   
