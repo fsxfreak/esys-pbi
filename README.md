@@ -4,10 +4,10 @@ Experimental system synchronizing OpenBCI EEG and EKG, pupillabs and theeyetribe
 # SETUP
 1. Download and install [Python](https://www.python.org/downloads/) (version 2)
 2. Download and install [PsychoPy](http://psychopy.org/installation.html) Unfortunately, python3 is not supported here yet.
-3. Install Python modules (automatic installation): 
+3. Download or clone [esys-pbi repo](https://github.com/fsxfreak/esys-pbi.git)
+4. Install Python modules (automatic installation): 
    * Go to 'esys-pbi' folder on any command line terminal (eg. CommandPrompt on Windows)
    * Type ```pip install -r requirements.txt```
-4. Download or clone [esys-pbi repo](https://github.com/fsxfreak/esys-pbi.git)
 
 
 ## Dependencies
