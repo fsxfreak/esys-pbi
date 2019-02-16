@@ -1,5 +1,4 @@
 Pillow==4.0.0
-PsychoPy==1.84.2
 appdirs==1.4.0
 argparse==1.2.1
 configobj==5.0.6
@@ -15,3 +14,4 @@ pyparsing==2.1.10
 scipy==0.18.1
 six==1.10.0
 wsgiref==0.1.2
+PsychoPy==1.84.2
