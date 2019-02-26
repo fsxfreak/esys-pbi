@@ -35,13 +35,13 @@ class ExperimentConfig(object):
     self.trial_order = []
     for trial in trial_order:
       tokens = trial.split()
-      trial_name = tokens[0]
-      if len(tokens) > 1:
-        freq = tokens[1]
-        for i in range(int(freq)):
-          self.trial_order.append(trial_name)
-      self.trial_order.append(trial_name)
-
+      for j in range(0,len(tokens),2):
+        trial_name = tokens[j]
+        if len(tokens) > 1:
+          freq = tokens[j+1]
+          for i in range(int(freq)):
+            self.trial_order.append(trial_name)
+        #self.trial_order.append(trial_name)
     self.ordering = ordering 
 
     if self.ordering == 'random':
